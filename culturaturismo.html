@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SynkLocal - Cultura & Turismo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #F8F9FA;
+            --bg-card: #FFFFFF;
+            --text-main: #546E7A;
+            --primary: #4DB6AC;
+            --primary-dark: #26A69A;
+            --secondary: #90CAF9;
+            --accent: #FFD54F;
+            --font-body: 'Nunito', sans-serif;
+            --font-display: 'Pacifico', cursive;
+        }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+        #main-title {
+            font-family: var(--font-display);
+            color: var(--primary-dark);
+        }
+        .view { transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out; }
+        .hidden-view { display: none; opacity: 0; transform: translateY(10px); }
+        #culture-map, #trails-map {
+            height: 50vh;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(77, 182, 172, 0.15), 0 8px 10px -6px rgba(77, 182, 172, 0.15);
+        }
+        .scroll-container { scrollbar-width: none; -ms-overflow-style: none; }
+        .scroll-container::-webkit-scrollbar { display: none; }
+        .filter-btn.active, .tab-btn.active {
+            color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            font-weight: 700;
+        }
+        .filter-btn, .tab-btn { transition: all 0.25s ease-out; }
+        .tab-content { transition: opacity 0.3s ease-in-out; }
+        .tab-content.hidden { display: none; opacity: 0; }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: #B2DFDB;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+            border-radius: 3px;
+        }
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        .timeline-container.left { left: 0; }
+        .timeline-container.right { left: 50%; }
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            right: -14px;
+            background-color: white;
+            border: 5px solid var(--primary);
+            top: 32px;
+            border-radius: 50%;
+            z-index: 1;
+            transition: transform 0.2s ease-out;
+        }
+        .timeline-container:hover::after {
+            transform: scale(1.1);
+        }
+        .timeline-container.right::after { left: -14px; }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 1rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        .timeline-container:hover .timeline-content {
+            transform: translateY(-5px);
+        }
+        .timeline-content .year {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .timeline-content .title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 0.75rem;
+        }
+        .timeline-content .event-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #546E7A;
+        }
+        
+        /* Mobile Timeline Adjustments */
+        @media screen and (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 15px;
+            }
+            .timeline-container.left, .timeline-container.right {
+                left: 0%;
+            }
+            .timeline-container.left::after, .timeline-container.right::after {
+                left: 15px;
+            }
+        }
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+        }
+        .leaflet-popup-content {
+            margin: 14px;
+            font-family: var(--font-body);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div id="app" class="container mx-auto p-4 sm:p-6 max-w-7xl">
+
+        <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-lg shadow-sm -mx-4 sm:-mx-6 mb-8 px-4 sm:px-6 py-3 rounded-b-2xl">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 id="main-title" class="text-3xl sm:text-4xl cursor-pointer" onclick="App.navigateTo('city-selection')">SynkLocal</h1>
+                <nav class="hidden md:flex items-center space-x-6">
+                    <button id="change-city-btn" onclick="App.navigateTo('city-selection')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Trocar Localidade</button>
+                </nav>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-[var(--primary-dark)] focus:outline-none p-2 -mr-2">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <div id="mobile-menu" class="hidden md:hidden mb-6 bg-white rounded-2xl shadow-lg p-4">
+            <a href="#" onclick="App.navigateTo('city-selection'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Trocar Localidade</a>
+        </div>
+
+        <main>
+            <div id="city-selection-view" class="view">
+                <section class="text-center mb-10 md:mb-12">
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-[var(--text-main)] tracking-tight">Bem-vindo ao Guia Cultural! ✨</h2>
+                    <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">Selecione uma localidade para começar a explorar a cultura e o turismo.</p>
+                </section>
+                <div id="city-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
+            </div>
+            
+            <div id="culture-view" class="hidden-view view">
+                 <button onclick="App.navigateTo('city-selection')" class="bg-white text-gray-800 px-5 py-2.5 rounded-full mb-6 hover:bg-gray-100 transition-all shadow-md active:scale-95 text-sm font-semibold">← Voltar para seleção</button>
+                 <div id="culture-content"></div>
+            </div>
+
+        </main>
+        
+        <footer class="text-center mt-16 pt-8 border-t border-teal-100">
+            <p class="text-gray-400 text-sm">© 2025 SynkLocal. Todos os direitos reservados.</p>
+        </footer>
+    </div>
+    
+    <button id="scrollToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 bg-[var(--primary)] text-white p-3 rounded-full shadow-lg hover:bg-[var(--primary-dark)] focus:outline-none opacity-0 transform translate-y-4 hover:scale-110 active:scale-100 transition-all">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+
+<script>
+const DB = {
+    cities: [
+        { 
+            name: "Lídice", 
+            image: "imagem/lidice/capaLidice.jpg", 
+            lat: -22.79, 
+            lon: -44.18,
+            culture: {
+                shortcutImage: "https://www.rj.gov.br/wp-content/uploads/2022/07/Lidice-Capa-1-1.jpg",
+                timeline: [
+                    { year: "1942", title: "A Tragédia Original", event: "A vila de Lídice, na antiga Tchecoslováquia, é brutalmente destruída como retaliação nazista. O evento choca a comunidade internacional e inspira atos de solidariedade ao redor do mundo." },
+                    { year: "1944", title: "O Renascimento no Brasil", event: "Em um gesto de homenagem e esperança, o então distrito de Santo Antônio do Capivari é oficialmente rebatizado para Lídice. A nova cidade nasce como um farol de paz e memória." },
+                    { year: "Década de 1950", title: "Construção da Identidade", event: "A cidade começa a se desenvolver, com a construção da Igreja de São Miguel Arcanjo e do centro cívico, projetado para ser o coração da comunidade, fortalecendo sua nova identidade." },
+                    { year: "Hoje", title: "Memória Viva e Natureza", event: "Lídice é um destino que une história e ecoturismo. O Centro Cultural preserva a memória da tragédia e do renascimento, enquanto as cachoeiras e a beleza da Mata Atlântica atraem visitantes em busca de paz e conexão." }
+                ],
+                gastronomia: [
+                    { nome: "Galinhada", imagem: "imagem/lidice/gastronomiaLidice/galinhada.webp", desc: "Prato clássico da roça, feito com frango caipira e arroz, temperado com açafrão e cheiro-verde." },
+                    { nome: "Doce de Leite Pastoso", imagem: "imagem/lidice/gastronomiaLidice/docedeleite.jpg", desc: "Uma sobremesa cremosa e irresistível, feita lentamente no tacho de cobre." }
+                ],
+                legends: [
+                    { title: "O Protetor das Matas", image: "imagem/lidice/natureza/lendadaregiao1.jpg", story: "Dizem os mais antigos que as matas ao redor de Lídice são guardadas por um espírito antigo, uma criatura meio homem, meio bicho, que protege os animais e as nascentes. Ele só aparece para aqueles que desrespeitam a natureza, com um assobio que gela a espinha. Muitos caçadores já voltaram de mãos vazias, jurando terem sido enganados por trilhas que mudavam de lugar e sons estranhos que os guiavam para longe de suas presas." }
+                ],
+                gallery: [
+                    "https://www.rj.gov.br/wp-content/uploads/2022/07/Lidice-Capa-1-1.jpg", "https://mapadecultura.rj.gov.br/wp-content/uploads/2018/06/IMG_20180610_135003233.jpg", "https://www.diariodovale.com.br/wp-content/uploads/2022/06/Lidice_2.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Centro_Cultural_de_L%C3%ADdice.jpg/1200px-Centro_Cultural_de_L%C3%ADdice.jpg", "https://visit.rio.br/wp-content/uploads/2022/11/cachoeira-da-usina-rio-claro-cred-leo-machado-1.jpg", "https://www.turisrio.rj.gov.br/wp-content/uploads/2022/07/Rio-Claro-Cachoeira-do-Tenebroso-Foto-Leo-Machado-1.jpg"
+                ],
+                tourism: {
+                    intro: "Lídice é um convite à paz e à aventura. Além de sua história tocante, o distrito é um refúgio para amantes da natureza, com cachoeiras cristalinas e a exuberância da Mata Atlântica.",
+                    spots: [
+                        { name: "Cachoeira da Usina", type: "Cachoeira", description: "Uma bela queda d'água com poço para banho, ideal para relaxar e se conectar com a natureza. O acesso é fácil, perfeito para um passeio em família.", gallery: ["imagem/lidice/turismo/cachoeiradausina.jpg", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
+                        { name: "Centro Cultural de Lídice", type: "História", description: "Um espaço dedicado a preservar a memória da vila tcheca e a história do renascimento da cidade brasileira. Um local emocionante e educativo.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
+                        { name: "Represa do Funil", type: "Lazer", description: "Oferece paisagens deslumbrantes e é um ótimo local para pesca e atividades náuticas. O pôr do sol na represa é um espetáculo à parte.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                    ]
+                }
+            }
+        },
+        { 
+            name: "Rio Claro", 
+            image: "imagem/rioclaro/capaRioclaro.webp", 
+            lat: -22.72, 
+            lon: -44.13,
+            culture: {
+                shortcutImage: "https://visit.rio.br/wp-content/uploads/2022/11/parque-sao-joao-marcos-rio-claro-cred-leo-machado-1.jpg",
+                timeline: [
+                    { year: "Início do Séc. XIX", title: "O Ouro Verde", event: "A região do Vale do Paraíba se torna o epicentro da produção de café no Brasil. Rio Claro e seus arredores veem o surgimento de ricas fazendas e a ascensão dos 'Barões do Café'." },
+                    { year: "1872", title: "Chegada da Ferrovia", event: "A inauguração da estação de trem em Rio Claro impulsiona ainda mais a economia cafeeira, facilitando o escoamento da produção para os portos e consolidando a riqueza local." },
+                    { year: "1940", title: "A 'Atlântida' Brasileira", event: "Para a expansão da capacidade energética do Rio de Janeiro, a cidade histórica de São João Marcos, um tesouro do período colonial, é desapropriada e inundada, deixando para trás memórias e ruínas." },
+                    { year: "2011", title: "Resgate Histórico", event: "O Parque Arqueológico e Ambiental de São João Marcos é inaugurado sobre as ruínas da cidade submersa, transformando a área em um poderoso centro de educação, cultura e turismo." }
+                ],
+                gastronomia: [
+                    { nome: "Feijão Tropeiro", imagem: "imagem/rioclaro/gastronomiarioclaro/feijaotropeiro.jpg", desc: "Herança dos tropeiros, uma mistura robusta de feijão, farinha, linguiça, ovos e torresmo." },
+                    { nome: "Bolo de Fubá com Goiabada", imagem: "imagem/rioclaro/gastronomiarioclaro/bolodefuba.jpg", desc: "Um clássico do café da tarde, fofinho e com o doce sabor da goiabada caseira." }
+                ],
+                legends: [
+                    { title: "A Noiva da Serra", image: "imagem/imagensquebradas/imagemindisponivel.png", story: "Conta a lenda que, em noites de lua cheia, motoristas que passam pela serra de Rio Claro podem avistar a figura etérea de uma mulher vestida de noiva na beira da estrada. Dizem ser o espírito de uma jovem que morreu em um acidente a caminho de seu casamento. Ela apenas busca uma carona para finalmente chegar à igreja e encontrar a paz." },
+                    { title: "O Tesouro de São João Marcos", image: "imagem/imagensquebradas/imagemindisponivel.png", story: "Quando a cidade de São João Marcos foi inundada, muitos de seus ricos moradores teriam enterrado suas fortunas para não as entregar ao governo. Até hoje, pescadores e aventureiros contam histórias de luzes misteriosas e sons de sinos vindos do fundo da represa, acreditando ser o chamado do ouro perdido dos barões do café, que ainda aguarda para ser encontrado." }
+                ],
+                peopleStories: [
+                    { name: "Seu Jaci", photo: "imagem/imagensquebradas/perfilindisponivel.png", story: "Conhecido como o 'guardião das histórias', Seu Jaci, com seus 87 anos, é a memória viva de Rio Claro. Sentado em sua varanda, ele narra com detalhes a época dos barões do café, a construção da ferrovia e as histórias da antiga São João Marcos antes de ser inundada. Para ele, 'cada pedra e cada árvore daqui tem algo a dizer, basta saber escutar'." },
+                    { name: "Dona Elza", photo: "imagem/imagensquebradas/perfilindisponivel.png", story: "Dona Elza é a alma da culinária local. Sua receita de bolo de fubá com goiabada, passada por três gerações, é um patrimônio da cidade. Em sua pequena venda, ela não apenas vende doces, mas também compartilha afeto e um sorriso caloroso, mantendo viva a tradição do sabor caseiro e do acolhimento do interior." }
+                ],
+                gallery: [
+                    "https://visit.rio.br/wp-content/uploads/2022/11/parque-sao-joao-marcos-rio-claro-cred-leo-machado-1.jpg", "https://mapadecultura.rj.gov.br/wp-content/uploads/2017/10/mapa-cultura-rio-claro-parque-arqueologico-sao-joao-marcos-foto-leo-machado-01.jpg", "https://www.band.uol.com.br/image/2022/07/20/20220719-120516-001-1_800x450.jpg", "https://i.ytimg.com/vi/uQ2Yy-4h2gU/maxresdefault.jpg", "https://www.turisrio.rj.gov.br/wp-content/uploads/2022/07/Rio-Claro-Fazenda-Unia%CC%83o-by-@viajando_sem_parar-1.jpg", "https://vejario.abril.com.br/wp-content/uploads/2021/07/fazenda-Uniao.jpg.jpg"
+                ],
+                tourism: {
+                    intro: "Rio Claro é uma viagem no tempo. Explore as ruínas de uma cidade submersa, visite fazendas que contam a história do café e mergulhe na rica herança cultural do Vale do Paraíba.",
+                    spots: [
+                        { name: "Parque Arqueológico de São João Marcos", type: "Parque Histórico", description: "Conhecida como a 'Atlântida Brasileira', as ruínas da cidade inundada de São João Marcos oferecem uma experiência única de imersão na história e na natureza.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
+                        { name: "Fazenda União", type: "Turismo Rural", description: "Uma fazenda histórica do ciclo do café, perfeitamente preservada. Oferece visitas guiadas, hospedagem e uma autêntica experiência da vida dos barões do café.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
+                        { name: "Cachoeira do Tenebroso", type: "Cachoeira", description: "Uma das mais belas quedas d'água da região, com um poço profundo e águas cristalinas, cercada pela Mata Atlântica. Ideal para aventureiros.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                    ]
+                }
+            }
+        },
+        { 
+            name: "Passa Três", 
+            image: "imagem/passatres/capaPassatres.jpg", 
+            lat: -22.85, 
+            lon: -44.22,
+            culture: {
+                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história de Passa Três será detalhada aqui." }],
+                tourism: {
+                    intro: "Passa Três é um convite à tranquilidade e ao ecoturismo. Com suas cachoeiras escondidas e trilhas, é o destino perfeito para quem busca aventura e contato direto com a natureza.",
+                    spots: [
+                        { name: "Cachoeira Três Quedas", type: "Cachoeira", description: "Uma sequência de três belas quedas d'água que formam piscinas naturais. O local é perfeito para um dia de lazer e banhos refrescantes.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
+                        { name: "Pico do Sinfrônio", type: "Montanhismo", description: "Oferece uma das vistas mais espetaculares da região. A trilha até o cume é um desafio recompensado por um panorama de 360 graus do vale.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                    ]
+                }
+            }
+        },
+        { 
+            name: "Fazenda da Grama", 
+            image: "imagem/fazendagrama/capaFazendagrama.jpg", 
+            lat: -22.75, 
+            lon: -44.05,
+            culture: {
+                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história da Fazenda da Grama será detalhada aqui." }],
+                 tourism: {
+                    intro: "A região da Fazenda da Grama é marcada pelo turismo rural e pela história do café. É um lugar para desacelerar e apreciar a vida no campo e as belas paisagens.",
+                    spots: [
+                        { name: "Turismo Rural nas Fazendas", type: "Turismo Rural", description: "Explore as fazendas históricas da região, que oferecem cavalgadas, comidas típicas da roça e a oportunidade de vivenciar o dia a dia no campo.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                    ]
+                }
+            }
+        },
+        { 
+            name: "Getulândia", 
+            image: "imagem/getulandia/capaGetulandia.webp", 
+            lat: -22.68, 
+            lon: -44.01,
+            culture: {
+                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história de Getulândia será detalhada aqui." }],
+                tourism: {
+                    intro: "Getulândia preserva o charme de uma antiga vila ferroviária. Seus principais atrativos são a estação de trem e a tranquilidade de uma vida que segue o ritmo da natureza.",
+                    spots: [
+                        { name: "Antiga Estação Ferroviária", type: "História", description: "Um marco da história local, a estação de Getulândia é uma bela construção que remete ao tempo áureo das ferrovias na região.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                    ]
+                }
+            }
+        },
+    ]
+};
+
+const State = {
+    currentCity: null,
+    
+    clearMapInstances() {
+        // Map instances cleared if needed in the future
+    }
+};
+
+const App = {
+    init() {
+        document.addEventListener('DOMContentLoaded', () => {
+            UI.renderCitySelection();
+            this.navigateTo('city-selection');
+            document.getElementById('mobile-menu-button').addEventListener('click', UI.toggleMobileMenu);
+            window.addEventListener('scroll', UI.handleScroll);
+        });
+    },
+
+    navigateTo(view, data) {
+        State.clearMapInstances();
+        UI.showView(view);
+        window.scrollTo(0, 0);
+
+        setTimeout(() => {
+            switch(view) {
+                case 'city-selection':
+                    State.currentCity = null;
+                    UI.updateHeader("SynkLocal", false);
+                    UI.renderCitySelection();
+                    break;
+                case 'culture':
+                    UI.updateHeader(`Cultura em ${State.currentCity}`, true);
+                    UI.renderCulturePage(data);
+                    break;
+            }
+        }, 50); 
+    },
+
+    selectCity(cityName) {
+        State.currentCity = cityName;
+        this.navigateTo('culture');
+    },
+};
+
+const UI = {
+    showView(viewId) {
+        document.querySelectorAll('.view').forEach(v => {
+            v.classList.add('hidden-view');
+            v.classList.remove('opacity-100', 'translate-y-0');
+        });
+        const targetView = document.getElementById(`${viewId}-view`);
+        if (targetView) {
+            targetView.classList.remove('hidden-view');
+            setTimeout(() => {
+                targetView.classList.add('opacity-100');
+                targetView.style.transform = 'translateY(0)';
+            }, 10);
+        }
+    },
+
+    updateHeader(title, showNav) {
+        document.getElementById('main-title').textContent = title;
+        const navItems = ['change-city-btn'];
+        navItems.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('hidden', !showNav);
+        });
+    },
+
+    toggleMobileMenu() {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    },
+    
+    renderCitySelection() {
+        const grid = document.getElementById('city-grid');
+        grid.innerHTML = DB.cities.map(city => `
+            <div onclick="App.selectCity('${city.name}')" class="bg-white rounded-3xl shadow-lg shadow-teal-100/50 overflow-hidden cursor-pointer group transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/60">
+                <div class="h-56 overflow-hidden">
+                    <img src="${city.image}" alt="Imagem de ${city.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
+                </div>
+                <div class="p-6">
+                    <h3 class="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-[var(--primary-dark)] transition-colors duration-300">${city.name}</h3>
+                </div>
+            </div>
+        `).join('');
+    },
+    
+    updateMainGalleryImage(clickedThumbnail) {
+        const spotCard = clickedThumbnail.closest('.tourist-spot-card');
+
+        let mainImage;
+        if (spotCard) {
+            mainImage = spotCard.querySelector('.gallery-main-image');
+        } else {
+           return;
+        }
+        
+        const newSrc = clickedThumbnail.src;
+        
+        const thumbnailsContainer = clickedThumbnail.parentElement;
+        thumbnailsContainer.querySelectorAll('img').forEach(thumb => {
+            thumb.classList.remove('border-teal-500');
+            thumb.classList.add('border-transparent');
+        });
+        clickedThumbnail.classList.remove('border-transparent');
+        clickedThumbnail.classList.add('border-teal-500');
+
+        mainImage.classList.add('opacity-50');
+        setTimeout(() => {
+            mainImage.src = newSrc;
+            mainImage.classList.remove('opacity-50');
+        }, 300);
+    },
+
+    renderCulturePage(data) {
+        const container = document.getElementById('culture-content');
+        const city = DB.cities.find(c => c.name === State.currentCity);
+
+        if (!city || !city.culture) {
+            container.innerHTML = `<div class="bg-white rounded-3xl shadow-lg p-10 text-center"><h2 class="text-3xl font-bold mb-4">Cultura de ${State.currentCity}</h2> <p class="text-gray-500">Conteúdo sobre a cultura desta cidade estará disponível em breve.</p></div>`;
+            return;
+        }
+        
+        container.innerHTML = `
+            <div class="text-center mb-8 md:mb-10">
+                <h2 class="text-3xl md:text-5xl font-extrabold mb-3 text-[var(--text-main)] tracking-tight">Cultura e Turismo de ${city.name}</h2>
+                <p class="text-base sm:text-lg text-gray-500 max-w-3xl mx-auto">Uma jornada pela história, sabores e belezas que definem este lugar único.</p>
+            </div>
+            <div class="border-b border-gray-200 mb-6 sm:mb-8">
+                <nav class="-mb-px flex space-x-4 sm:space-x-6 justify-center overflow-x-auto scroll-container pb-2">
+                    <button onclick="UI.switchCultureTab('history', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm sm:text-lg">História</button>
+                    <button onclick="UI.switchCultureTab('tourism', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm sm:text-lg">Turismo</button>
+                    <button onclick="UI.switchCultureTab('legends', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm sm:text-lg">Lendas</button>
+                    <button onclick="UI.switchCultureTab('people', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm sm:text-lg">Pessoas</button>
+                </nav>
+            </div>
+            <div id="culture-history-tab" class="tab-content"></div>
+            <div id="culture-tourism-tab" class="tab-content hidden"></div>
+            <div id="culture-legends-tab" class="tab-content hidden"></div>
+            <div id="culture-people-tab" class="tab-content hidden"></div>
+        `;
+        
+        const initialTab = data?.tab || 'history';
+        const initialButton = container.querySelector(`.tab-btn[onclick*="'${initialTab}'"]`);
+        this.switchCultureTab(initialTab, initialButton || container.querySelector('.tab-btn'));
+    },
+
+    switchCultureTab(tabName, clickedButton) {
+        document.querySelectorAll('#culture-content .tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('#culture-content .tab-content').forEach(content => content.classList.add('hidden'));
+
+        clickedButton.classList.add('active');
+        document.getElementById(`culture-${tabName}-tab`).classList.remove('hidden');
+
+        State.clearMapInstances();
+
+        if(tabName === 'history') {
+            this.renderCultureHistoryTab();
+        } else if (tabName === 'tourism') {
+            this.renderCultureTourismTab();
+        } else if (tabName === 'legends') {
+            this.renderCultureLegendsTab();
+        } else if (tabName === 'people') {
+            this.renderCulturePeopleTab();
+        }
+    },
+
+    renderCultureHistoryTab() {
+        const container = document.getElementById('culture-history-tab');
+        const city = DB.cities.find(c => c.name === State.currentCity);
+         container.innerHTML = `
+            <div class="space-y-16">
+                ${city.culture.timeline ? `
+                <section>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center tracking-tight">Uma Viagem pela História 📜</h3>
+                    <div class="timeline">
+                        ${city.culture.timeline.map((item, index) => `
+                            <div class="timeline-container ${index % 2 === 0 ? 'left' : 'right'}">
+                                <div class="timeline-content">
+                                    <h4 class="year">${item.year}</h4>
+                                    <h5 class="title">${item.title}</h5>
+                                    <p class="event-desc">${item.event}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>` : ''}
+                ${city.culture.gastronomia && city.culture.gastronomia.length > 0 ? `
+                <section>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center tracking-tight">Sabores da Terra 🍲</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        ${city.culture.gastronomia.map(item => `
+                            <div class="bg-white rounded-2xl shadow-lg overflow-hidden group">
+                                <div class="h-48 overflow-hidden">
+                                    <img src="${item.imagem}" alt="${item.nome}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                </div>
+                                <div class="p-6">
+                                    <h4 class="font-bold text-xl text-gray-800">${item.nome}</h4>
+                                    <p class="text-gray-600 mt-2">${item.desc}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>` : ''}
+            </div>
+        `;
+    },
+
+    renderCultureTourismTab() {
+        const container = document.getElementById('culture-tourism-tab');
+        const city = DB.cities.find(c => c.name === State.currentCity);
+        const tourism = city.culture.tourism;
+
+        if (!tourism || !tourism.spots || tourism.spots.length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500 py-10">Informações turísticas para ${city.name} estarão disponíveis em breve.</p>`;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="space-y-12">
+                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto">${tourism.intro}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    ${tourism.spots.map((spot, spotIndex) => `
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden group flex flex-col tourist-spot-card">
+                            <div class="h-56 overflow-hidden">
+                                <img id="spot-main-image-${spotIndex}" src="${spot.gallery[0]}" alt="Imagem de ${spot.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 gallery-main-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
+                            </div>
+                            <div class="p-6 flex flex-col flex-grow">
+                                <span class="text-sm font-bold text-teal-600 mb-1">${spot.type}</span>
+                                <h4 class="text-xl font-bold text-gray-800 mb-2">${spot.name}</h4>
+                                <p class="text-gray-600 text-sm flex-grow">${spot.description}</p>
+                                <div class="flex overflow-x-auto space-x-2 pt-4 mt-4 border-t scroll-container">
+                                    ${spot.gallery.map((img, thumbIndex) => `
+                                        <img src="${img}" class="w-16 h-16 object-cover rounded-md cursor-pointer border-2 ${thumbIndex === 0 ? 'border-teal-500' : 'border-transparent'}" onclick="UI.updateMainGalleryImage(this)">
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    },
+
+    renderCultureLegendsTab() {
+        const container = document.getElementById('culture-legends-tab');
+        const city = DB.cities.find(c => c.name === State.currentCity);
+        const legends = city.culture.legends;
+
+        if (!legends || legends.length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500 py-10">Nenhuma lenda para ${city.name} foi adicionada ainda.</p>`;
+            return;
+        }
+
+        container.innerHTML = `
+            <div class="space-y-12">
+                <h3 class="text-2xl md:text-3xl font-bold text-center tracking-tight">Contos e Mistérios da Região 👻</h3>
+                ${legends.map(legend => `
+                    <div class="flex flex-col md:flex-row gap-8 bg-white p-4 sm:p-6 rounded-2xl shadow-lg items-center">
+                        <div class="w-full md:w-1/3 mb-4 md:mb-0">
+                            <img src="${legend.image}" alt="Ilustração para ${legend.title}" class="w-full h-64 object-cover rounded-xl shadow-md">
+                        </div>
+                        <div class="w-full md:w-2/3">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-3">${legend.title}</h4>
+                            <p class="text-gray-600 leading-relaxed prose">${legend.story}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    },
+
+    renderCulturePeopleTab() {
+        const container = document.getElementById('culture-people-tab');
+        const city = DB.cities.find(c => c.name === State.currentCity);
+        const people = city.culture.peopleStories;
+
+        if (!people || people.length === 0) {
+            container.innerHTML = `<p class="text-center text-gray-500 py-10">Nenhuma história para ${city.name} foi adicionada ainda.</p>`;
+            return;
+        }
+        
+        container.innerHTML = `
+            <div class="space-y-12">
+                 <h3 class="text-2xl md:text-3xl font-bold text-center tracking-tight">As Pessoas que Fazem a Cidade ❤️</h3>
+                ${people.map(person => `
+                    <div class="flex flex-col md:flex-row gap-8 bg-white p-4 sm:p-6 rounded-2xl shadow-lg items-center odd:md:flex-row-reverse">
+                        <div class="w-full md:w-1/3 mb-4 md:mb-0">
+                            <img src="${person.photo}" alt="Foto de ${person.name}" class="w-full h-80 object-cover rounded-xl shadow-md">
+                        </div>
+                        <div class="w-full md:w-2/3">
+                            <h4 class="text-2xl font-bold text-gray-800 mb-3">${person.name}</h4>
+                            <p class="text-gray-600 leading-relaxed prose">${person.story}</p>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    },
+
+    handleScroll() {
+        const btn = document.getElementById('scrollToTopBtn');
+        if (window.scrollY > 300) {
+            btn.classList.remove('opacity-0', 'translate-y-4');
+        } else {
+            btn.classList.add('opacity-0', 'translate-y-4');
+        }
+    }
+};
+
+App.init();
+
+</script>
+
+</body>
+</html>

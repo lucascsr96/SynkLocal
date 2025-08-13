@@ -131,54 +131,23 @@
             color: #546E7A;
         }
         
-        /* Mobile Timeline Adjustments */
         @media screen and (max-width: 768px) {
-            .timeline::after {
-                left: 31px;
-            }
-            .timeline-container {
-                width: 100%;
-                padding-left: 70px;
-                padding-right: 15px;
-            }
-            .timeline-container.left, .timeline-container.right {
-                left: 0%;
-            }
-            .timeline-container.left::after, .timeline-container.right::after {
-                left: 15px;
-            }
+            .timeline::after { left: 31px; }
+            .timeline-container { width: 100%; padding-left: 70px; padding-right: 15px; }
+            .timeline-container.left, .timeline-container.right { left: 0%; }
+            .timeline-container.left::after, .timeline-container.right::after { left: 15px; }
         }
 
-        .jornada-valor-card { 
-            transition: all 0.3s ease-in-out; 
-        }
-        .jornada-valor-card:hover { 
-            transform: translateY(-5px) scale(1.03); 
-            background-color: var(--bg-card); 
-            box-shadow: 0 10px 25px -5px rgba(77, 182, 172, 0.2), 0 8px 10px -6px rgba(77, 182, 172, 0.2); 
-            border-color: var(--primary);
-        }
-        .team-mosaic img { 
-            transition: transform 0.3s ease, filter 0.3s ease; 
-        }
-        .team-mosaic a:hover img { 
-            transform: scale(1.05); 
-            filter: brightness(1.1); 
-        }
-        .career-card {
-            transition: all 0.3s ease-in-out;
-        }
-        .career-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px -5px rgba(77, 182, 172, 0.25), 0 10px 15px -6px rgba(77, 182, 172, 0.25);
-        }
-        .leaflet-popup-content-wrapper {
-            border-radius: 12px;
-        }
-        .leaflet-popup-content {
-            margin: 14px;
-            font-family: var(--font-body);
-        }
+        .career-card { transition: all 0.3s ease-in-out; }
+        .career-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px -5px rgba(77, 182, 172, 0.25), 0 10px 15px -6px rgba(77, 182, 172, 0.25); }
+        
+        .leaflet-popup-content-wrapper { border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .leaflet-popup-content { margin: 0; font-family: var(--font-body); width: 250px; }
+        .leaflet-popup-content .popup-image { width: 100%; height: 120px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px; }
+        .leaflet-popup-content .popup-info { padding: 12px; }
+        .leaflet-popup-content .popup-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
+        .leaflet-popup-content .popup-link { font-weight: 600; color: var(--primary-dark); cursor: pointer; }
+        .leaflet-routing-container { display: none; }
     </style>
 </head>
 <body class="antialiased">
@@ -190,7 +159,6 @@
                 <h1 id="main-title" class="text-3xl sm:text-4xl cursor-pointer" onclick="App.navigateTo('city-selection')">SynkLocal</h1>
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="#" id="nav-home" onclick="App.navigateTo('home')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Início</a>
-                    <a href="#" id="nav-treasure" onclick="App.navigateTo('treasure-hunt')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Caça ao Tesouro</a>
                     <a href="#" id="nav-culture" onclick="App.navigateTo('culture')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Cultura & Turismo</a>
                     <a href="#" id="nav-events" onclick="App.navigateTo('events')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Eventos</a>
                     <a href="#" id="nav-careers" onclick="App.navigateTo('careers')" class="text-gray-500 hover:text-[var(--primary-dark)] font-medium transition-colors duration-300 hidden">Carreiras</a>
@@ -198,7 +166,7 @@
                     <a href="https://wa.me/5524936180096" target="_blank" class="bg-gradient-to-r from-[var(--primary)] to-[var(--accent)] text-white px-5 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:scale-105 active:scale-95 font-bold">Anuncie Aqui</a>
                 </nav>
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-[var(--primary-dark)] focus:outline-none p-2 -mr-2">
+                    <button id="mobile-menu-button" class="text-[var(--primary-dark)] focus:outline-none p-2 -mr-2 hidden">
                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                     </button>
                 </div>
@@ -207,7 +175,6 @@
 
         <div id="mobile-menu" class="hidden md:hidden mb-6 bg-white rounded-2xl shadow-lg p-4">
             <a href="#" onclick="App.navigateTo('home'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Início</a>
-            <a href="#" onclick="App.navigateTo('treasure-hunt'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Caça ao Tesouro</a>
             <a href="#" onclick="App.navigateTo('culture'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Cultura & Turismo</a>
             <a href="#" onclick="App.navigateTo('events'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Eventos</a>
             <a href="#" onclick="App.navigateTo('careers'); UI.toggleMobileMenu();" class="block py-3 px-4 hover:bg-teal-50 rounded-lg font-medium">Carreiras</a>
@@ -221,21 +188,14 @@
                     <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-4 text-[var(--text-main)] tracking-tight">Bem-vindo ao SynkLocal! ✨</h2>
                     <p class="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">Selecione uma localidade para começar a explorar o que há de melhor.</p>
                 </section>
-                <div id="city-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"></div>
+                <div id="city-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"></div>
             </div>
 
             <div id="home-view" class="hidden-view view"></div>
             
-            <div id="treasure-hunt-view" class="hidden-view view">
-                <button onclick="App.navigateTo('home')" class="bg-white text-gray-800 px-5 py-2.5 rounded-full mb-6 hover:bg-gray-100 transition-all shadow-md active:scale-95 text-sm font-semibold">← Voltar para o Início</button>
-                <div id="treasure-hunt-content"></div>
-            </div>
-
-            <div id="treasure-details-view" class="hidden-view view"></div>
-            
             <div id="culture-view" class="hidden-view view">
                  <button onclick="App.navigateTo('home')" class="bg-white text-gray-800 px-5 py-2.5 rounded-full mb-6 hover:bg-gray-100 transition-all shadow-md active:scale-95 text-sm font-semibold">← Voltar para o Início</button>
-                <div id="culture-content"></div>
+                 <div id="culture-content"></div>
             </div>
 
             <div id="careers-view" class="hidden-view view">
@@ -348,126 +308,77 @@
     </button>
 
 <script>
-// O SCRIPT JAVASCRIPT PERMANECE O MESMO, AS MUDANÇAS SÃO NO HTML/CSS
+// Objeto de dados (DB) adaptado para Rio Claro-RJ e Lídice
 const DB = {
     cities: [
         { 
-            name: "Lídice", 
-            image: "imagem/lidice/capaLidice.jpg", 
-            lat: -22.79, 
-            lon: -44.18,
-            culture: {
-                shortcutImage: "https://www.rj.gov.br/wp-content/uploads/2022/07/Lidice-Capa-1-1.jpg",
-                timeline: [
-                    { year: "1942", title: "A Tragédia Original", event: "A vila de Lídice, na antiga Tchecoslováquia, é brutalmente destruída como retaliação nazista. O evento choca a comunidade internacional e inspira atos de solidariedade ao redor do mundo." },
-                    { year: "1944", title: "O Renascimento no Brasil", event: "Em um gesto de homenagem e esperança, o então distrito de Santo Antônio do Capivari é oficialmente rebatizado para Lídice. A nova cidade nasce como um farol de paz e memória." },
-                    { year: "Década de 1950", title: "Construção da Identidade", event: "A cidade começa a se desenvolver, com a construção da Igreja de São Miguel Arcanjo e do centro cívico, projetado para ser o coração da comunidade, fortalecendo sua nova identidade." },
-                    { year: "Hoje", title: "Memória Viva e Natureza", event: "Lídice é um destino que une história e ecoturismo. O Centro Cultural preserva a memória da tragédia e do renascimento, enquanto as cachoeiras e a beleza da Mata Atlântica atraem visitantes em busca de paz e conexão." }
-                ],
-                gastronomia: [
-                    { nome: "Galinhada", imagem: "imagem/lidice/gastronomiaLidice/galinhada.webp", desc: "Prato clássico da roça, feito com frango caipira e arroz, temperado com açafrão e cheiro-verde." },
-                    { nome: "Doce de Leite Pastoso", imagem: "imagem/lidice/gastronomiaLidice/docedeleite.jpg", desc: "Uma sobremesa cremosa e irresistível, feita lentamente no tacho de cobre." }
-                ],
-                legends: [
-                    { title: "O Protetor das Matas", image: "imagem/lidice/natureza/lendadaregiao1.jpg", story: "Dizem os mais antigos que as matas ao redor de Lídice são guardadas por um espírito antigo, uma criatura meio homem, meio bicho, que protege os animais e as nascentes. Ele só aparece para aqueles que desrespeitam a natureza, com um assobio que gela a espinha. Muitos caçadores já voltaram de mãos vazias, jurando terem sido enganados por trilhas que mudavam de lugar e sons estranhos que os guiavam para longe de suas presas." }
-                ],
-                gallery: [
-                    "https://www.rj.gov.br/wp-content/uploads/2022/07/Lidice-Capa-1-1.jpg", "https://mapadecultura.rj.gov.br/wp-content/uploads/2018/06/IMG_20180610_135003233.jpg", "https://www.diariodovale.com.br/wp-content/uploads/2022/06/Lidice_2.jpg", "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Centro_Cultural_de_L%C3%ADdice.jpg/1200px-Centro_Cultural_de_L%C3%ADdice.jpg", "https://visit.rio.br/wp-content/uploads/2022/11/cachoeira-da-usina-rio-claro-cred-leo-machado-1.jpg", "https://www.turisrio.rj.gov.br/wp-content/uploads/2022/07/Rio-Claro-Cachoeira-do-Tenebroso-Foto-Leo-Machado-1.jpg"
-                ],
-                tourism: {
-                    intro: "Lídice é um convite à paz e à aventura. Além de sua história tocante, o distrito é um refúgio para amantes da natureza, com cachoeiras cristalinas e a exuberância da Mata Atlântica.",
-                    spots: [
-                        { name: "Cachoeira da Usina", type: "Cachoeira", description: "Uma bela queda d'água com poço para banho, ideal para relaxar e se conectar com a natureza. O acesso é fácil, perfeito para um passeio em família.", gallery: ["imagem/lidice/turismo/cachoeiradausina.jpg", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
-                        { name: "Centro Cultural de Lídice", type: "História", description: "Um espaço dedicado a preservar a memória da vila tcheca e a história do renascimento da cidade brasileira. Um local emocionante e educativo.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
-                        { name: "Represa do Funil", type: "Lazer", description: "Oferece paisagens deslumbrantes e é um ótimo local para pesca e atividades náuticas. O pôr do sol na represa é um espetáculo à parte.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
-                    ]
-                }
-            }
-        },
-        { 
             name: "Rio Claro", 
-            image: "imagem/rioclaro/capaRioclaro.webp", 
-            lat: -22.72, 
-            lon: -44.13,
+            image: "https://www.ferias.tur.br/imgs/2335/rioclaro-rj/g_pousada-fazenda-sao-joaquim-01.jpg", 
+            lat: -22.724, 
+            lon: -44.135,
             culture: {
-                shortcutImage: "https://visit.rio.br/wp-content/uploads/2022/11/parque-sao-joao-marcos-rio-claro-cred-leo-machado-1.jpg",
                 timeline: [
-                    { year: "Início do Séc. XIX", title: "O Ouro Verde", event: "A região do Vale do Paraíba se torna o epicentro da produção de café no Brasil. Rio Claro e seus arredores veem o surgimento de ricas fazendas e a ascensão dos 'Barões do Café'." },
-                    { year: "1872", title: "Chegada da Ferrovia", event: "A inauguração da estação de trem em Rio Claro impulsiona ainda mais a economia cafeeira, facilitando o escoamento da produção para os portos e consolidando a riqueza local." },
-                    { year: "1940", title: "A 'Atlântida' Brasileira", event: "Para a expansão da capacidade energética do Rio de Janeiro, a cidade histórica de São João Marcos, um tesouro do período colonial, é desapropriada e inundada, deixando para trás memórias e ruínas." },
-                    { year: "2011", title: "Resgate Histórico", event: "O Parque Arqueológico e Ambiental de São João Marcos é inaugurado sobre as ruínas da cidade submersa, transformando a área em um poderoso centro de educação, cultura e turismo." }
+                    { year: "Século 18", title: "Caminhos do Ouro", event: "A região começa a ser desbravada como rota de passagem para o ouro vindo de Minas Gerais, com a abertura do 'Caminho Novo'." },
+                    { year: "1822", title: "O Berço do Café", event: "É fundada a Freguesia de São João Batista do Rio Claro, marcando o início da ascensão da região como uma das maiores produtoras de café do Império." },
+                    { year: "1849", title: "Elevação à Vila", event: "Rio Claro é elevada à categoria de Vila, consolidando sua importância econômica e política no Vale do Paraíba, graças aos 'Barões do Café'." },
+                    { year: "1938", title: "A Chegada das Águas", event: "Inicia-se a construção da Represa de Ribeirão das Lajes, um marco da engenharia que alterou a paisagem e impulsionou o desenvolvimento da região." },
+                    { year: "1942", title: "Memória Submersa", event: "A antiga vila de São João Marcos é inundada para a ampliação da represa. Hoje, o local é um parque arqueológico e ambiental que resgata essa história." },
+                    { year: "Hoje", title: "Turismo e Natureza", event: "Rio Claro se destaca pelo turismo histórico, com suas fazendas centenárias, e pelo ecoturismo, com cachoeiras e trilhas na Mata Atlântica." }
                 ],
                 gastronomia: [
-                    { nome: "Feijão Tropeiro", imagem: "imagem/rioclaro/gastronomiarioclaro/feijaotropeiro.jpg", desc: "Herança dos tropeiros, uma mistura robusta de feijão, farinha, linguiça, ovos e torresmo." },
-                    { nome: "Bolo de Fubá com Goiabada", imagem: "imagem/rioclaro/gastronomiarioclaro/bolodefuba.jpg", desc: "Um clássico do café da tarde, fofinho e com o doce sabor da goiabada caseira." }
+                    { nome: "Comida Tropeira", imagem: "https://www.receitasnestle.com.br/sites/default/files/srh_recipes/80d5d91b377b35da2338d66e35ba21ee.jpg", desc: "Herança dos viajantes, pratos como feijão tropeiro e paçoca de carne são fortes na culinária local." },
+                    { nome: "Doces Caseiros", imagem: "https://revistacasaejardim.globo.com/path/mvp/original/2021/07/28/doce-de-leite-caseiro-com-apenas-2-ingredientes-1-820158.jpg", desc: "Compotas, doces de leite e de frutas, feitos artesanalmente nas fazendas e sítios da região." }
                 ],
                 legends: [
-                    { title: "A Noiva da Serra", image: "imagem/imagensquebradas/imagemindisponivel.png", story: "Conta a lenda que, em noites de lua cheia, motoristas que passam pela serra de Rio Claro podem avistar a figura etérea de uma mulher vestida de noiva na beira da estrada. Dizem ser o espírito de uma jovem que morreu em um acidente a caminho de seu casamento. Ela apenas busca uma carona para finalmente chegar à igreja e encontrar a paz." },
-                    { title: "O Tesouro de São João Marcos", image: "imagem/imagensquebradas/imagemindisponivel.png", story: "Quando a cidade de São João Marcos foi inundada, muitos de seus ricos moradores teriam enterrado suas fortunas para não as entregar ao governo. Até hoje, pescadores e aventureiros contam histórias de luzes misteriosas e sons de sinos vindos do fundo da represa, acreditando ser o chamado do ouro perdido dos barões do café, que ainda aguarda para ser encontrado." }
+                     { title: "A Lenda do Túnel dos Escravos", image: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Fazenda_do_Salto_-_Rio_Claro_-_panoramio.jpg", story: "Diz a lenda que as grandes fazendas de café da época do Império, como a Fazenda do Salto, eram conectadas por uma rede de túneis subterrâneos. Esses túneis teriam sido construídos por escravos e serviriam como rota de fuga secreta ou para o transporte de riquezas sem o conhecimento dos fiscais da Coroa. Muitos caçadores de tesouros já exploraram a região em busca de entradas secretas para esses túneis, sonhando em encontrar ouro ou joias dos antigos barões do café. Embora nunca comprovada, a história alimenta a imaginação e o mistério que pairam sobre os casarões históricos de Rio Claro." }
                 ],
                 peopleStories: [
-                    { name: "Seu Jaci", photo: "imagem/imagensquebradas/perfilindisponivel.png", story: "Conhecido como o 'guardião das histórias', Seu Jaci, com seus 87 anos, é a memória viva de Rio Claro. Sentado em sua varanda, ele narra com detalhes a época dos barões do café, a construção da ferrovia e as histórias da antiga São João Marcos antes de ser inundada. Para ele, 'cada pedra e cada árvore daqui tem algo a dizer, basta saber escutar'." },
-                    { name: "Dona Elza", photo: "imagem/imagensquebradas/perfilindisponivel.png", story: "Dona Elza é a alma da culinária local. Sua receita de bolo de fubá com goiabada, passada por três gerações, é um patrimônio da cidade. Em sua pequena venda, ela não apenas vende doces, mas também compartilha afeto e um sorriso caloroso, mantendo viva a tradição do sabor caseiro e do acolhimento do interior." }
+                    { name: "Joaquim José de Sousa Breves", photo: "https://upload.wikimedia.org/wikipedia/commons/a/a2/Joaquim_Jos%C3%A9_de_Souza_Breves.jpg", story: "Conhecido como o 'Rei do Café' no Brasil Império, Joaquim Breves foi um dos homens mais ricos e poderosos de seu tempo. Sua fortuna era imensurável, com mais de 50 fazendas de café espalhadas pelo Vale do Paraíba, incluindo vastas terras na região de Rio Claro. Ele personificou a opulência e o poder dos 'Barões do Café', influenciando a política e a economia de todo o país. As fazendas históricas que hoje encantam os turistas são um legado direto dessa era de ouro, moldada por figuras como Breves." }
                 ],
                 gallery: [
-                    "https://visit.rio.br/wp-content/uploads/2022/11/parque-sao-joao-marcos-rio-claro-cred-leo-machado-1.jpg", "https://mapadecultura.rj.gov.br/wp-content/uploads/2017/10/mapa-cultura-rio-claro-parque-arqueologico-sao-joao-marcos-foto-leo-machado-01.jpg", "https://www.band.uol.com.br/image/2022/07/20/20220719-120516-001-1_800x450.jpg", "https://i.ytimg.com/vi/uQ2Yy-4h2gU/maxresdefault.jpg", "https://www.turisrio.rj.gov.br/wp-content/uploads/2022/07/Rio-Claro-Fazenda-Unia%CC%83o-by-@viajando_sem_parar-1.jpg", "https://vejario.abril.com.br/wp-content/uploads/2021/07/fazenda-Uniao.jpg.jpg"
+                    "https://mapaderiodejaneiro.com.br/wp-content/uploads/2021/04/parque-arqueologico-sao-joao-marcos.jpg", 
+                    "https://i0.wp.com/diariodovale.com.br/wp-content/uploads/2021/07/fazenda-sao-joaquim-da-grama-1.jpg", 
+                    "https://secretarias.rioclaro.rj.gov.br/turismo/wp-content/uploads/sites/13/2022/10/WhatsApp-Image-2022-10-21-at-12.01.27.jpeg"
                 ],
                 tourism: {
-                    intro: "Rio Claro é uma viagem no tempo. Explore as ruínas de uma cidade submersa, visite fazendas que contam a história do café e mergulhe na rica herança cultural do Vale do Paraíba.",
+                    intro: "Terra dos Barões do Café, Rio Claro te convida para uma viagem no tempo por suas fazendas históricas e a se refrescar em suas belas cachoeiras.",
                     spots: [
-                        { name: "Parque Arqueológico de São João Marcos", type: "Parque Histórico", description: "Conhecida como a 'Atlântida Brasileira', as ruínas da cidade inundada de São João Marcos oferecem uma experiência única de imersão na história e na natureza.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
-                        { name: "Fazenda União", type: "Turismo Rural", description: "Uma fazenda histórica do ciclo do café, perfeitamente preservada. Oferece visitas guiadas, hospedagem e uma autêntica experiência da vida dos barões do café.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
-                        { name: "Cachoeira do Tenebroso", type: "Cachoeira", description: "Uma das mais belas quedas d'água da região, com um poço profundo e águas cristalinas, cercada pela Mata Atlântica. Ideal para aventureiros.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                        { id: 'spot-rc-1', name: "Parque Arqueológico de São João Marcos", type: "História e Cultura", category: "Cultura", lat: -22.759, lon: -44.049, tip: "Participe de uma visita guiada para entender a rica história da cidade que foi submersa.", description: "Ruínas da antiga cidade inundada pela represa de Lajes. Um museu a céu aberto que conta a história da região.", gallery: ["https://www.historiadorio.com.br/wp-content/uploads/2012/10/sao-joao-marcos-1-1.jpg", "https://vejario.abril.com.br/wp-content/uploads/2016/12/cidade-submersa-de-sao-joao-marcos-no-rio-de-janeiro-tera-ruinas-visitaveis-20110302143003233.jpg"] },
+                        { id: 'spot-rc-2', name: "Fazenda São Joaquim da Grama", type: "Turismo Rural", category: "Lazer", lat: -22.682, lon: -44.093, tip: "Agende um almoço na fazenda para provar a autêntica comida tropeira feita no fogão a lenha.", description: "Uma das mais belas e bem preservadas fazendas do ciclo do café, oferece visitas guiadas, hospedagem e um mergulho na história.", gallery: ["https://www.fazendasaojoaquim.com.br/wp-content/uploads/2018/12/home-01.jpg"] },
+                        { id: 'spot-rc-3', name: "Cachoeira Sete Quedas", type: "Natureza e Aventura", category: "Natureza", lat: -22.691, lon: -44.184, tip: "O acesso exige uma pequena trilha. Vá de tênis e leve repelente.", description: "Sequência de quedas d'água que formam piscinas naturais de água cristalina, ideais para um banho refrescante.", gallery: ["https://live.staticflickr.com/502/19131609104_0b7b1b5e5c_b.jpg"] }
                     ]
                 }
             }
         },
         { 
-            name: "Passa Três", 
-            image: "imagem/passatres/capaPassatres.jpg", 
-            lat: -22.85, 
-            lon: -44.22,
+            name: "Lídice", 
+            image: "https://mapio.net/images-p/11267425.jpg", 
+            lat: -22.775, 
+            lon: -44.201,
             culture: {
-                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história de Passa Três será detalhada aqui." }],
+                timeline: [
+                    { year: "1942", title: "O Massacre na Tchecoslováquia", event: "A vila de Lídice, na antiga Tchecoslováquia, é completamente destruída por forças nazistas como retaliação pela morte de um oficial alemão." },
+                    { year: "1944", title: "Um Ato de Solidariedade", event: "O então distrito de Santo Antônio do Capivari, em Rio Claro, é rebatizado para Lídice, em um gesto de solidariedade e homenagem à vila mártir tcheca." },
+                    { year: "1947", title: "Monumento à Paz", event: "É inaugurado o monumento em homenagem a Lídice, com um busto do presidente tcheco Edvard Beneš, simbolizando a amizade entre os povos e a luta pela paz." },
+                    { year: "Hoje", title: "Refúgio e Memória", event: "Lídice é um distrito tranquilo, conhecido por sua natureza exuberante, cachoeiras e por manter viva a memória de sua comovente história de origem." }
+                ],
+                peopleStories: [
+                    { name: "Dr. Edvard Beneš", photo: "https://upload.wikimedia.org/wikipedia/commons/e/e3/Edvard_Bene%C5%A1_LOC_31555.jpg", story: "Presidente da Tchecoslováquia no exílio durante a Segunda Guerra Mundial, Edvard Beneš tornou-se um símbolo da resistência contra a tirania nazista. A destruição da vila de Lídice em seu país chocou o mundo. Em um gesto de solidariedade, o Brasil, através de seus diplomatas e da comunidade local, renomeou o distrito de Santo Antônio do Capivari para Lídice. O busto de Beneš na praça central não é apenas uma homenagem a ele, mas um lembrete perpétuo da amizade entre nações e da importância da paz." }
+                ],
+                gallery: [
+                    "https://upload.wikimedia.org/wikipedia/commons/1/10/Pra%C3%A7a_de_L%C3%ADdice%2C_Rio_Claro%2C_RJ.jpg",
+                    "https://www.prefeituraderioclaro.com.br/images/noticias/noticia_5331_1.jpg",
+                    "https://i.ytimg.com/vi/bX7j-eY_9Xw/maxresdefault.jpg"
+                ],
                 tourism: {
-                    intro: "Passa Três é um convite à tranquilidade e ao ecoturismo. Com suas cachoeiras escondidas e trilhas, é o destino perfeito para quem busca aventura e contato direto com a natureza.",
+                    intro: "Conheça a história de solidariedade que deu nome a este distrito e explore suas belezas naturais, como rios e cachoeiras perfeitas para o ecoturismo.",
                     spots: [
-                        { name: "Cachoeira Três Quedas", type: "Cachoeira", description: "Uma sequência de três belas quedas d'água que formam piscinas naturais. O local é perfeito para um dia de lazer e banhos refrescantes.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] },
-                        { name: "Pico do Sinfrônio", type: "Montanhismo", description: "Oferece uma das vistas mais espetaculares da região. A trilha até o cume é um desafio recompensado por um panorama de 360 graus do vale.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
+                        { id: 'spot-li-1', name: "Cachoeira da Pamonha", type: "Natureza e Lazer", category: "Natureza", lat: -22.815, lon: -44.189, tip: "O local possui um bar simples que vende a famosa pamonha. Não deixe de provar!", description: "Bela cachoeira com poço para banho e um bar rústico, muito procurada nos fins de semana para relaxar.", gallery: ["https://i.ytimg.com/vi/bX7j-eY_9Xw/maxresdefault.jpg"] },
+                        { id: 'spot-li-2', name: "Praça Lídice", type: "História", category: "Cultura", lat: -22.775, lon: -44.200, tip: "Leia as placas no monumento para entender a história completa do nome da cidade.", description: "O coração do distrito, onde se encontra o monumento em homenagem à vila tcheca e a igreja local. Um lugar de paz e memória.", gallery: ["https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Pra%C3%A7a_de_L%C3%ADdice%2C_Rio_Claro%2C_RJ.jpg/1280px-Pra%C3%A7a_de_L%C3%ADdice%2C_Rio_Claro%2C_RJ.jpg"] }
                     ]
                 }
             }
-        },
-        { 
-            name: "Fazenda da Grama", 
-            image: "imagem/fazendagrama/capaFazendagrama.jpg", 
-            lat: -22.75, 
-            lon: -44.05,
-            culture: {
-                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história da Fazenda da Grama será detalhada aqui." }],
-                 tourism: {
-                    intro: "A região da Fazenda da Grama é marcada pelo turismo rural e pela história do café. É um lugar para desacelerar e apreciar a vida no campo e as belas paisagens.",
-                    spots: [
-                        { name: "Turismo Rural nas Fazendas", type: "Turismo Rural", description: "Explore as fazendas históricas da região, que oferecem cavalgadas, comidas típicas da roça e a oportunidade de vivenciar o dia a dia no campo.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
-                    ]
-                }
-            }
-        },
-        { 
-            name: "Getulândia", 
-            image: "imagem/getulandia/capaGetulandia.webp", 
-            lat: -22.68, 
-            lon: -44.01,
-            culture: {
-                timeline: [{ year: "Em breve", title: "História a ser contada", event: "A história de Getulândia será detalhada aqui." }],
-                tourism: {
-                    intro: "Getulândia preserva o charme de uma antiga vila ferroviária. Seus principais atrativos são a estação de trem e a tranquilidade de uma vida que segue o ritmo da natureza.",
-                    spots: [
-                        { name: "Antiga Estação Ferroviária", type: "História", description: "Um marco da história local, a estação de Getulândia é uma bela construção que remete ao tempo áureo das ferrovias na região.", gallery: ["imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png", "imagem/imagensquebradas/imagemindisponivel.png"] }
-                    ]
-                }
-            }
-        },
+        }
     ],
     categories: [
         { name: "Alimentação", icon: "🍔" }, { name: "Saúde", icon: "🩺" },
@@ -475,279 +386,85 @@ const DB = {
         { name: "Comércio", icon: "🛒" }, { name: "Beleza", icon: "💅" },
         { name: "Educação", icon: "📚" }, { name: "Automotivo", icon: "🚗" },
         { name: "Pets", icon: "🐾" }, { name: "Lazer", icon: "🎉" },
+        { name: "Promoções", icon: "🔥" },
     ],
     companies: [
+        // Empresas de Rio Claro - RJ
         {
-            id: "EmpresaRC/SulNet RC Internet Provider",
-            cidade: "Rio Claro",
-            nome: "SulNet RC Internet Provider",
-            logotipo: "imagem/rioclaro/empresasRC/capasulnet.png",
-            descricao: "Sua melhor conexão com o mundo! Oferecemos internet fibra óptica de alta velocidade e estabilidade para residências e empresas em Rio Claro e região.",
-            endereco: { rua: "Rua Mozart Cesar Valle, 204", bairro: "Centro", cidade: "Rio Claro", cep: "27460-000", lat: -22.721, lon: -44.138 },
-            contato: { whatsapp: "+552435114774", website: "https://sulnettelecom.com.br" },
-            horario_funcionamento: { segunda: "08:00-22:00", terca: "08:00-22:00", quarta: "08:00-22:00", quinta: "08:00-22:00", sexta: "08:00-22:00", sabado: "08:00-14:00" },
-            categorias: ["Serviços", "Internet", "Tecnologia"],
-            palavras_chave: ["internet", "fibra óptica", "provedor", "conexão", "velocidade"],
-            galeria_fotos: [
-                "imagem/rioclaro/empresasRC/capasulnet.png",
-                "imagem/rioclaro/empresasRC/galeriasulnet1.png",
-                "imagem/rioclaro/empresasRC/galeriasulnet2.jpg",
-                "imagem/rioclaro/empresasRC/galeriasulnet3.jpg",
-            ],
-            avaliacoes: [{ usuario: "Mariana F.", nota: 5, comentario: "A melhor internet da cidade! O suporte técnico é rápido e eficiente." }],
-            plano: "destaque",
-            data_cadastro: "2025-04-10T09:00:00Z",
-            destaques: ["Fibra Óptica de Ponta a Ponta", "Planos Flexíveis", "Suporte Técnico Local"],
-            verificado: true,
-            servicosProdutos: [
-                { nome: "Planos Residenciais Fibra", descricao: "Internet de altíssima velocidade para sua casa, ideal para streaming, jogos online e home office.", preco: "Desde R$ 99/mês" },
-                { nome: "Soluções Empresariais", descricao: "Links dedicados e planos personalizados para empresas que precisam de máxima performance e estabilidade.", preco: "Consultar" },
-                { nome: "Suporte Técnico Especializado", descricao: "Nossa equipe está sempre pronta para ajudar, com atendimento rápido, local e humanizado.", preco: "Incluso" },
-                { nome: "Instalação Profissional", descricao: "Técnicos qualificados garantem uma instalação limpa e eficiente, otimizando o sinal na sua propriedade.", preco: "Consultar" }
-            ],
-            sobreNos: {
-                historia: "Nascida da paixão por tecnologia e do desejo de conectar pessoas, a SulNet RC Internet Provider foi fundada em 2008 por Alex, um programador local que sonhava em levar internet de qualidade para todos os cantos de Rio Claro. O que começou com uma pequena antena e muitos sonhos, hoje é uma robusta rede de fibra óptica que orgulhosamente serve milhares de lares e empresas, impulsionando o desenvolvimento e a comunicação na nossa região.",
-                missao: "Nossa missão é democratizar o acesso à informação e ao entretenimento, oferecendo uma conexão de internet ultrarrápida, estável e com um atendimento humano, próximo e que entende as necessidades de cada cliente.",
-                fundador: {
-                    nome: "Alex",
-                    foto: "imagem/imagensquebradas/perfilindisponivel.png",
-                    citacao: "Acredito que uma conexão de qualidade não é apenas sobre tecnologia, é sobre criar pontes, encurtar distâncias e abrir um universo de possibilidades para nossa comunidade."
-                },
-                valores: [
-                    { icone: "fa-solid fa-satellite-dish", titulo: "Inovação Constante", descricao: "Buscamos sempre as melhores e mais novas tecnologias para garantir uma conexão de ponta." },
-                    { icone: "fa-solid fa-users", titulo: "Foco no Cliente", descricao: "Nosso maior ativo é a satisfação dos nossos clientes. O suporte é local e humanizado." },
-                    { icone: "fa-solid fa-handshake", titulo: "Confiança e Transparência", descricao: "Construímos relações duradouras baseadas na honestidade e em serviços confiáveis." }
-                ],
-                teamGallery: [
-                    { name: "Daniel", role: "Atendimento Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                    { name: "Gerllan", role: "Atendimento Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                    { name: "João Pedro", role: "Atendimento Financeiro", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                    { name: "Maria Eduarda", role: "Atendimento Financeiro", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                    { name: "Mara", role: "Gerente", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "Alexandre", role: "Engenheiro", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "André", role: "Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "Aldair", role: "Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "Leonardo", role: "Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "Daniel Brejo Seco", role: "Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                  //{ name: "Daniel", role: "Técnico", img: "imagem/imagensquebradas/perfilindisponivel.png" },
-                ]
-            },
-            promotion: {
-                title: "1º Mês Grátis!",
-                description: "Contrate qualquer plano de fibra óptica e a primeira mensalidade é por nossa conta. Velocidade e economia para você!",
-                tag: "OFERTA DE BOAS-VINDAS"
-            }
+            id: "empresa-rc-01", cidade: "Rio Claro - RJ", nome: "Restaurante Fazenda do Sol", logotipo: "https://placehold.co/200x200/FFB300/ffffff?text=FS",
+            descricao: "O autêntico sabor da roça no coração de Rio Claro. Comida feita no fogão a lenha, com ingredientes frescos e um ambiente acolhedor.",
+            endereco: { rua: "Rua XV de Novembro, 150", bairro: "Centro", cidade: "Rio Claro - RJ", lat: -22.723, lon: -44.136 },
+            contato: { whatsapp: "+5524912345678" },
+            horario_funcionamento: { sexta: "11:00-15:00", sabado: "11:00-16:00", domingo: "11:00-16:00" },
+            categorias: ["Alimentação", "Restaurantes", "Comida Mineira"], palavras_chave: ["comida tropeira", "fogão a lenha", "almoço", "fazenda"],
+            galeria_fotos: ["https://media-cdn.tripadvisor.com/media/photo-s/0f/b7/95/59/restaurante-da-fazenda.jpg"],
+            avaliacoes: [{ usuario: "Carlos M.", nota: 5, comentario: "Comida maravilhosa, com gostinho de casa da avó!" }],
+            plano: "destaque", data_cadastro: "2025-01-20T10:00:00Z", destaques: ["Feijoada aos Sábados", "Música ao Vivo", "Doces Caseiros"], verificado: true
         },
         {
-            id: "empresa-01", cidade: "Rio Claro", nome: "Pizzaria Forno a Lenha",
-            logotipo: "https://placehold.co/200x200/4DB6AC/ffffff?text=Pizza",
-            descricao: "As mais deliciosas pizzas da cidade, com massa de fermentação natural e ingredientes frescos. Ambiente familiar e aconchegante. Peça também pelo nosso delivery!",
-            endereco: { rua: "Rua Principal, 123", bairro: "Centro", cidade: "Rio Claro", cep: "27460-000", lat: -22.723, lon: -44.135 },
-            contato: { whatsapp: "+5524912345678", website: "https://example.com" },
-            horario_funcionamento: { terca: "18:00-23:00", quarta: "18:00-23:00", quinta: "18:00-23:00", sexta: "18:00-00:00", sabado: "18:00-00:00", domingo: "18:00-23:00" },
-            categorias: ["Alimentação", "Pizzarias", "Restaurantes"],
-            palavras_chave: ["pizza", "forno a lenha", "delivery", "jantar", "rodízio"],
-            galeria_fotos: ["https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?q=80&w=800&auto=format&fit=crop"],
-            avaliacoes: [ { usuario: "Ana B.", nota: 5, comentario: "A melhor pizza que já comi! Massa incrível."}],
-            plano: "destaque", data_cadastro: "2025-01-15T10:00:00Z",
-            destaques: ["Massa de Fermentação Natural", "Ingredientes Frescos", "Ambiente Climatizado"],
-            verificado: true, videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-            delivery: true, acceptsReservations: true, outdoorSeating: false, // Food Guide Properties
-            servicosProdutos: [
-                { nome: "Pizzas Salgadas Tradicionais", descricao: "Mais de 40 sabores, desde os clássicos até criações exclusivas da casa, com massa de fermentação natural.", preco: "Desde R$ 45" },
-                { nome: "Pizzas Doces", descricao: "Deliciosas opções para sobremesa, como a de chocolate com morango e a de banana com canela.", preco: "Desde R$ 38" },
-                { nome: "Calzones", descricao: "Pizzas fechadas e generosamente recheadas, assadas com perfeição em nosso forno a lenha.", preco: "Desde R$ 52" },
-                { nome: "Bebidas e Vinhos", descricao: "Uma seleção de vinhos, cervejas artesanais e outras bebidas para harmonizar com sua pizza.", preco: "Consultar" }
-            ],
-            sobreNos: {
-                historia: "Desde 2005, a Pizzaria Forno a Lenha é um pedaço da Itália em Rio Claro. Nascida do sonho do Chef Giuseppe, nossa pizzaria traz receitas de família e o autêntico sabor da pizza assada em forno a lenha, criando momentos deliciosos para a nossa comunidade.",
-                missao: "Servir pizzas memoráveis que unem as pessoas, utilizando ingredientes frescos e de alta qualidade, em um ambiente acolhedor e familiar.",
-                fundador: {
-                    nome: "Chef Giuseppe",
-                    foto: "https://randomuser.me/api/portraits/men/46.jpg",
-                    citacao: "Cada pizza que sai do nosso forno leva um pouco da minha paixão e da história da minha família. Buon appetito!"
-                },
-                valores: [
-                    { icone: "fa-solid fa-fire-burner", titulo: "Tradição", descricao: "Respeitamos as receitas clássicas e o método artesanal do forno a lenha." },
-                    { icone: "fa-solid fa-seedling", titulo: "Qualidade", descricao: "Selecionamos apenas os melhores e mais frescos ingredientes para nossas pizzas." },
-                    { icone: "fa-solid fa-heart", titulo: "Hospitalidade", descricao: "Recebemos cada cliente como parte da nossa grande família italiana." }
-                ],
-                teamGallery: [
-                    { name: "Maria", role: "Pizzaiola", img: "https://randomuser.me/api/portraits/women/62.jpg" },
-                    { name: "João", role: "Garçom", img: "https://randomuser.me/api/portraits/men/62.jpg" },
-                    { name: "Sofia", role: "Atendimento", img: "https://randomuser.me/api/portraits/women/63.jpg" },
-                    { name: "Lucas", role: "Cozinha", img: "https://randomuser.me/api/portraits/men/63.jpg" }
-                ]
-            },
-            promotion: {
-                title: "Pizza em Dobro",
-                description: "Na compra de qualquer pizza grande do nosso cardápio, você ganha uma pizza média de calabresa. Válido de terça a quinta.",
-                tag: "LEVE 2 PAGUE 1"
-            }
+            id: "empresa-rc-02", cidade: "Rio Claro - RJ", nome: "Pousada Recanto das Águas", logotipo: "https://placehold.co/200x200/4DD0E1/ffffff?text=RA",
+            descricao: "Seu refúgio na natureza. Chalés confortáveis, piscina, e acesso a trilhas. Perfeito para relaxar e se reconectar.",
+            endereco: { rua: "Estrada das Sete Quedas, km 2", bairro: "Zona Rural", cidade: "Rio Claro - RJ", lat: -22.695, lon: -44.180 },
+            contato: { whatsapp: "+5524923456789" },
+            horario_funcionamento: { segunda: "08:00-20:00", terca: "08:00-20:00", quarta: "08:00-20:00", quinta: "08:00-20:00", sexta: "08:00-22:00", sabado: "08:00-22:00", domingo: "08:00-18:00" },
+            categorias: ["Lazer", "Hospedagem"], palavras_chave: ["pousada", "hotel", "natureza", "cachoeira", "descanso"],
+            galeria_fotos: ["https://media-cdn.tripadvisor.com/media/photo-s/0d/f9/57/5a/pousada-recanto-das-aguas.jpg"],
+            avaliacoes: [{ usuario: "Ana P.", nota: 5, comentario: "Lugar incrível para relaxar. O café da manhã é espetacular!" }],
+            plano: "destaque", data_cadastro: "2025-02-15T18:00:00Z", destaques: ["Chalés com Lareira", "Piscina Natural", "Café da Manhã Colonial"], verificado: true, delivery: false, acceptsReservations: true, outdoorSeating: true
         },
         {
-            id: "Salgaderia MB", cidade: "Lídice", nome: "Salgaderia MB",
-            logotipo: "https://placehold.co/200x200/FFCA28/ffffff?text=MB",
-            descricao: "A Salgaderia MB oferece uma variedade deliciosa de salgados frescos e saborosos, perfeitos para qualquer ocasião. De coxinhas crocantes a risoles cremosos, cada item é feito com carinho e ingredientes de qualidade, garantindo um toque caseiro que agrada a todos os paladares. Ideal para festas, lanches ou aquele desejo repentino!",
-            endereco: { rua: "Praça Padre Ezequiel N°38", bairro: "Centro", cidade: "Lídice", cep: "27475000", lat: -22.791, lon: -44.182 },
-            contato: { whatsapp: "+5524987654321", website: "https://www.instagram.com/salgaderia.mb/" },
-            horario_funcionamento: { segunda: "09:00-20:00", terca: "09:00-20:00", quarta: "09:00-20:00", quinta: "09:00-20:00", sexta: "09:00-20:00", sabado: "09:00-20:00" },
-            categorias: ["Alimentação", "Lanches", "Salgados"],
-            palavras_chave: ["salgados", "coxinha", "festa", "lanche", "encomenda"],
-            galeria_fotos: ["https://images.unsplash.com/photo-1598930338318-4c133c35efe2?q=80&w=800", "https://images.unsplash.com/photo-1604482039902-3e7423750841?q=80&w=800", "https://images.unsplash.com/photo-1599406518353-a5d6251a3a3e?q=80&w=800"],
-            avaliacoes: [{ usuario: "Ricardo M.", nota: 5, comentario: "Salgados deliciosos e sempre frescos. Recomendo!" }, { usuario: "Fernanda L.", nota: 5, comentario: "A melhor coxinha da região, sem dúvidas!" }],
-            plano: "normal", data_cadastro: "2025-03-20T14:00:00Z",
-            destaques: ["Variedade Irresistível", "Qualidade Garantida", "Ingredientes Fresquinhos"],
-            verificado: true, videoUrl: "https://placehold.co/1600x900/cccccc/ffffff?text=Video+Indisponível",
-            delivery: true, acceptsReservations: false, outdoorSeating: true, // Food Guide Properties
-            servicosProdutos: [
-                { nome: "Salgados Fritos na Hora", descricao: "Coxinha, risole, quibe, bolinha de queijo e mais, fritos no momento do seu pedido para garantir a crocância.", preco: "Desde R$ 7" },
-                { nome: "Salgados Assados", descricao: "Opções mais leves e igualmente deliciosas como esfiha, joelho e empadas variadas.", preco: "Desde R$ 8" },
-                { nome: "Encomendas para Festas", descricao: "Planeje seu evento conosco! Oferecemos centos de salgados para aniversários, reuniões e confraternizações.", preco: "Consultar" },
-                { nome: "Bebidas", descricao: "Refrigerantes, sucos e água para acompanhar seu lanche.", preco: "Desde R$ 5" }
-            ],
-            sobreNos: {
-                historia: "A Salgaderia MB nasceu na cozinha de Dona Benta, uma cozinheira de mão cheia que transformou seu amor por salgados em um negócio de família. Hoje, seus filhos mantêm a tradição, oferecendo o sabor caseiro que conquistou Lídice.",
-                missao: "Levar alegria e sabor para a mesa dos nossos clientes com salgados feitos com amor, ingredientes de qualidade e um toque de tradição familiar.",
-                fundador: {
-                    nome: "Dona Benta",
-                    foto: "https://randomuser.me/api/portraits/women/47.jpg",
-                    citacao: "O segredo do bom salgado está no carinho que a gente coloca em cada um."
-                },
-                valores: [
-                    { icone: "fa-solid fa-kitchen-set", titulo: "Sabor Caseiro", descricao: "Mantemos as receitas originais que são o nosso segredo do sucesso." },
-                    { icone: "fa-solid fa-star", titulo: "Qualidade", descricao: "Usamos apenas ingredientes frescos e selecionados em nossos produtos." },
-                    { icone: "fa-solid fa-face-smile", titulo: "Atendimento", descricao: "Cada cliente é recebido com um sorriso e tratado como parte da família." }
-                ],
-                teamGallery: [
-                    { name: "Roberto", role: "Cozinheiro", img: "https://randomuser.me/api/portraits/men/64.jpg" },
-                    { name: "Lúcia", role: "Atendente", img: "https://randomuser.me/api/portraits/women/64.jpg" },
-                    { name: "Carlos", role: "Entregador", img: "https://randomuser.me/api/portraits/men/65.jpg" },
-                    { name: "Beatriz", role: "Cozinheira", img: "https://randomuser.me/api/portraits/women/65.jpg" }
-                ]
-            }
+            id: "empresa-rc-03", cidade: "Rio Claro - RJ", nome: "Agropecuária Vale Verde", logotipo: "https://placehold.co/200x200/81C784/ffffff?text=VV",
+            descricao: "Tudo para o homem do campo e para o seu jardim. Ferramentas, rações, sementes e consultoria especializada.",
+            endereco: { rua: "Av. João Batista, 500", bairro: "Centro", cidade: "Rio Claro - RJ", lat: -22.725, lon: -44.138 },
+            contato: { whatsapp: "+5524934567890" },
+            horario_funcionamento: { segunda: "08:00-18:00", terca: "08:00-18:00", quarta: "08:00-18:00", quinta: "08:00-18:00", sexta: "08:00-18:00", sabado: "08:00-13:00" },
+            categorias: ["Comércio", "Serviços", "Pets"], palavras_chave: ["agropecuária", "ração", "ferramentas", "jardinagem"],
+            galeria_fotos: ["https://www.cnabrasil.org.br/assets/images/galeria/agro-brasilia-3.jpeg"],
+            avaliacoes: [{ usuario: "José F.", nota: 4, comentario: "Sempre encontro o que preciso para meu sítio." }],
+            plano: "normal", data_cadastro: "2025-03-10T09:00:00Z", destaques: ["Entrega na Zona Rural", "Variedade de Rações"], verificado: false
         },
         {
-            id: "empresa-03", cidade: "Passa Três", nome: "Bar do Zeca",
-            logotipo: "https://placehold.co/200x200/FFD54F/333333?text=Bar",
-            descricao: "O melhor da boemia local. Cerveja gelada, petiscos clássicos e música ao vivo toda sexta-feira. Venha conferir!",
-            endereco: { rua: "Rua da Matriz, 55", bairro: "Centro", cidade: "Passa Três", cep: "27470-000", lat: -22.855, lon: -44.225 },
-            contato: { whatsapp: "+5524988887777" },
-            horario_funcionamento: { terca: "17:00-01:00", quarta: "17:00-01:00", quinta: "17:00-02:00", sexta: "16:00-03:00", sabado: "14:00-03:00" },
-            categorias: ["Alimentação", "Lazer", "Bares"],
-            palavras_chave: ["bar", "cerveja", "música ao vivo", "petisco", "happy hour"],
-            galeria_fotos: ["https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1543007631-283050bb3e8c?q=80&w=800&auto=format&fit=crop"],
-            avaliacoes: [{ usuario: "Bruno C.", nota: 5, comentario: "Lugar incrível! Música de sexta é imperdível." }, { usuario: "Juliana A.", nota: 4, comentario: "Gostei do ambiente, mas poderia ter mais opções vegetarianas." }],
-            plano: "destaque", data_cadastro: "2025-02-18T11:00:00Z",
-            destaques: ["Música ao Vivo", "Cerveja Gelada", "Petiscos Tradicionais"],
-            verificado: true,
-            delivery: false, acceptsReservations: false, outdoorSeating: true, // Food Guide Properties
-            servicosProdutos: [
-                { nome: "Cervejas Especiais e Tradicionais", descricao: "Uma vasta seleção de cervejas, desde as mais geladas e populares até rótulos artesanais da região.", preco: "Desde R$ 10" },
-                { nome: "Petiscos de Boteco", descricao: "Porções generosas de torresmo, mandioca frita, linguiça acebolada e outros clássicos para acompanhar sua bebida.", preco: "Desde R$ 25" },
-                { nome: "Música ao Vivo", descricao: "Toda sexta-feira, o melhor da música regional para animar sua noite. Consulte a programação!", preco: "Couvert R$ 10" },
-                { nome: "Doses e Caipirinhas", descricao: "Cachaças selecionadas e caipirinhas preparadas na hora com frutas frescas da estação.", preco: "Desde R$ 15" }
-            ],
-            sobreNos: {
-                historia: "O Bar do Zeca é o ponto de encontro de Passa Três desde 1998. O que começou como um pequeno balcão, hoje é o palco de grandes amizades, boa música e, claro, a cerveja mais gelada da região. Zeca faz questão de conhecer cada cliente pelo nome.",
-                missao: "Ser o melhor lugar para relaxar, encontrar amigos e celebrar a vida, com boa música, comida de boteco de qualidade e um ambiente que é a cara da nossa gente.",
-                fundador: {
-                    nome: "Zeca",
-                    foto: "https://randomuser.me/api/portraits/men/48.jpg",
-                    citacao: "Meu bar é a extensão da minha casa. E aqui, todo mundo é bem-vindo."
-                },
-                valores: [
-                    { icone: "fa-solid fa-guitar", titulo: "Música Boa", descricao: "A trilha sonora perfeita para criar memórias inesquecíveis." },
-                    { icone: "fa-solid fa-beer-mug-empty", titulo: "Cerveja Gelada", descricao: "Nossa prioridade número um, sempre no ponto certo para celebrar." },
-                    { icone: "fa-solid fa-comments", titulo: "Amizade", descricao: "Mais que um bar, um lugar para fazer e encontrar amigos." }
-                ],
-                teamGallery: [
-                    { name: "Rita", role: "Garçonete", img: "https://randomuser.me/api/portraits/women/66.jpg" },
-                    { name: "Jorge", role: "Cozinheiro", img: "https://randomuser.me/api/portraits/men/66.jpg" },
-                    { name: "Beto", role: "Garçom", img: "https://randomuser.me/api/portraits/men/67.jpg" },
-                    { name: "Clara", role: "Caixa", img: "https://randomuser.me/api/portraits/women/67.jpg" }
-                ]
-            },
-            promotion: {
-                title: "Caipirinha em Dobro",
-                description: "Sextou com S de SynkLocal! Peça uma caipirinha e a segunda é por nossa conta. Válido toda sexta, das 18h às 21h.",
-                tag: "HAPPY HOUR"
-            }
+            id: "empresa-rc-04", cidade: "Rio Claro - RJ", nome: "Farmácia Central", logotipo: "https://placehold.co/200x200/64B5F6/ffffff?text=FC",
+            descricao: "Cuidando da saúde da família rioclarense. Medicamentos, perfumaria e atendimento farmacêutico de confiança.",
+            endereco: { rua: "Praça da Matriz, 25", bairro: "Centro", cidade: "Rio Claro - RJ", lat: -22.722, lon: -44.135 },
+            contato: { whatsapp: "+5524945678901" },
+            horario_funcionamento: { segunda: "07:30-21:00", terca: "07:30-21:00", quarta: "07:30-21:00", quinta: "07:30-21:00", sexta: "07:30-21:00", sabado: "08:00-20:00" },
+            categorias: ["Saúde", "Farmácias"], palavras_chave: ["remédio", "farmácia", "saúde", "perfumaria"],
+            galeria_fotos: ["https://s2-g1.glbimg.com/pL2MDHR-qXpC52CV8IqUa0B-oEU=/0x0:2048x1365/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2023/X/Y/iM952xQZqlpB9a838MZA/farmacia.jpg"],
+            avaliacoes: [{ usuario: "Maria S.", nota: 5, comentario: "Atendimento sempre muito atencioso." }],
+            plano: "destaque", data_cadastro: "2025-04-01T08:00:00Z", destaques: ["Entrega Rápida", "Farmacêutico em Tempo Integral"], verificado: true
+        },
+        // Empresas de Lídice
+        {
+            id: "empresa-li-01", cidade: "Lídice", nome: "Bar e Restaurante da Cachoeira", logotipo: "https://placehold.co/200x200/FFEE58/ffffff?text=BC",
+            descricao: "A parada obrigatória em Lídice. Cerveja gelada, porções generosas, a famosa pamonha e o som relaxante da cachoeira.",
+            endereco: { rua: "Estrada da Pamonha, s/n", bairro: "Zona Rural", cidade: "Lídice", lat: -22.814, lon: -44.190 },
+            contato: { whatsapp: "+5524956789012" },
+            horario_funcionamento: { quinta: "10:00-18:00", sexta: "10:00-20:00", sabado: "09:00-22:00", domingo: "09:00-19:00" },
+            categorias: ["Alimentação", "Bares", "Lazer"], palavras_chave: ["pamonha", "cachoeira", "bar", "cerveja", "porções"],
+            galeria_fotos: ["https://i.ytimg.com/vi/W4a06n4f6mY/maxresdefault.jpg"],
+            avaliacoes: [{ usuario: "Fernando P.", nota: 5, comentario: "Pamonha deliciosa e lugar incrível para passar o dia." }],
+            plano: "normal", data_cadastro: "2025-05-20T11:00:00Z", destaques: ["Pamonha Doce e Salgada", "Música ao Vivo aos Domingos", "Acesso à Cachoeira"], verificado: true, delivery: false, acceptsReservations: false, outdoorSeating: true
         },
         {
-            id: "empresa-04", cidade: "Getulândia", nome: "Academia Vida Ativa",
-            logotipo: "https://placehold.co/200x200/81C784/ffffff?text=Gym",
-            descricao: "Estrutura completa para musculação, aulas de dança e funcional. Venha transformar seu corpo e sua saúde.",
-            endereco: { rua: "Rua do Comércio, 100", bairro: "Centro", cidade: "Getulândia", cep: "27450-000", lat: -22.683, lon: -44.012 },
-            contato: { whatsapp: "+5524955443322" },
-            horario_funcionamento: { segunda: "06:00-22:00", terca: "06:00-22:00", quarta: "06:00-22:00", quinta: "06:00-22:00", sexta: "06:00-22:00", sabado: "08:00-14:00" },
-            categorias: ["Saúde", "Academias"],
-            palavras_chave: ["musculação", "fitness", "ginástica", "saúde"],
-            galeria_fotos: ["https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=800&auto=format&fit=crop", "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=800&auto=format&fit=crop"],
-            avaliacoes: [{ usuario: "Juliana R.", nota: 4, comentario: "Ótimos equipamentos e bons professores." }, { nota: 5, usuario: "Marcos V.", comentario: "A melhor academia que já treinei. Completa e com preço justo." }],
-            plano: "normal", data_cadastro: "2025-05-01T08:00:00Z",
-            destaques: ["Equipamentos Modernos", "Grade de Aulas Completa", "Planos Flexíveis"],
-            verificado: false,
-            servicosProdutos: [
-                { nome: "Musculação com Equipamentos Modernos", descricao: "Área de musculação completa com aparelhos de última geração para todos os grupos musculares.", preco: "Incluso no Plano" },
-                { nome: "Aulas Coletivas (Dança e Funcional)", descricao: "Grade de aulas variada com Zumba, FitDance e Treinamento Funcional para queimar calorias de forma divertida.", preco: "Incluso no Plano" },
-                { nome: "Avaliação Física e Acompanhamento", descricao: "Nossos instrutores realizam avaliações periódicas para acompanhar sua evolução e ajustar seu treino.", preco: "Consultar" },
-                { nome: "Planos Flexíveis", descricao: "Oferecemos planos mensais, trimestrais e anuais que se encaixam na sua rotina e no seu bolso.", preco: "Desde R$ 89" }
-            ],
-            sobreNos: {
-                historia: "A Academia Vida Ativa foi criada para ser um espaço de transformação em Getulândia. Com equipamentos modernos e uma equipe apaixonada, ajudamos nossos alunos a alcançarem seus objetivos de saúde e bem-estar desde 2015.",
-                missao: "Inspirar um estilo de vida mais ativo e saudável, oferecendo um ambiente motivador, treinos personalizados e o melhor suporte profissional.",
-                fundador: {
-                    nome: "Marcos V.",
-                    foto: "https://randomuser.me/api/portraits/men/49.jpg",
-                    citacao: "Acredito que o movimento é a chave para uma vida longa e feliz. Aqui, nós movemos pessoas."
-                },
-                valores: [
-                    { icone: "fa-solid fa-dumbbell", titulo: "Resultados", descricao: "Focamos em treinos eficientes para que você alcance seus objetivos." },
-                    { icone: "fa-solid fa-heart-pulse", titulo: "Saúde", descricao: "Promovemos o bem-estar completo, do corpo e da mente." },
-                    { icone: "fa-solid fa-people-group", titulo: "Comunidade", descricao: "Criamos um ambiente de apoio e motivação entre alunos e professores." }
-                ],
-                teamGallery: [
-                    { name: "Juliana", role: "Instrutora", img: "https://randomuser.me/api/portraits/women/68.jpg" },
-                    { name: "Fábio", role: "Instrutor", img: "https://randomuser.me/api/portraits/men/68.jpg" },
-                    { name: "Sandra", role: "Recepção", img: "https://randomuser.me/api/portraits/women/69.jpg" },
-                    { name: "Paulo", role: "Instrutor", img: "https://randomuser.me/api/portraits/men/69.jpg" }
-                ]
-            }
-        },
-    ],
-    events: [
-        { id: "evento-01", cidade: "Rio Claro", nome: "Festa de São João na Praça", descricao: "A tradicional festa junina da paróquia de Rio Claro está de volta! Venha se deliciar com barracas de comidas típicas, como canjica, pamonha, e quentão. Haverá apresentação de quadrilha profissional, um grande leilão de prendas e o famoso bingão com prêmios incríveis. Traga sua família para uma noite de muita alegria e tradição.", data_inicio: "2025-07-24T18:00:00-03:00", data_fim: "2025-07-24T23:59:00-03:00", local: "Praça da Matriz", imagem: "https://images.unsplash.com/photo-1562217317-a044737c76e2?q=80&w=800&auto=format&fit=crop", categoria: "Festa", popular: true, organizador: "Paróquia de Rio Claro", preco: "Gratuito", publico_alvo: "Famílias", tags: ["Comida Típica", "Quadrilha", "Música ao Vivo"] },
-        { id: "evento-02", cidade: "Lídice", nome: "Feira de Artesanato Local", descricao: "Explore a riqueza cultural da nossa região na Feira de Artesanato de Lídice. Descubra o talento dos artesãos locais, com peças únicas de decoração, vestuário, e uma deliciosa gastronomia artesanal. É a oportunidade perfeita para encontrar presentes originais e apoiar os produtores da nossa comunidade.", data_inicio: "2025-07-25T09:00:00-03:00", data_fim: "2025-07-25T18:00:00-03:00", local: "Praça Central", imagem: "https://images.unsplash.com/photo-1528824632644-abc355a6905c?q=80&w=800&auto=format&fit=crop", categoria: "Feira", organizador: "Associação de Artesãos", preco: "Entrada Franca", publico_alvo: "Todos os públicos", tags: ["Artesanato", "Cultura", "Lazer"] },
-        { id: "evento-03", cidade: "Passa Três", nome: "Sexta do Rock Acústico", descricao: "Prepare-se para uma noite inesquecível no Bar do Zeca! A 'Sexta do Rock Acústico' traz o melhor do rock nacional e internacional na voz e violão do talentoso artista local, Zé Ramalho Cover. Ambiente intimista, cerveja gelada e petiscos deliciosos. Couvert artístico opcional.", data_inicio: "2025-07-25T20:00:00-03:00", data_fim: "2025-07-25T23:00:00-03:00", local: "Bar do Zeca", imagem: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=800&auto=format&fit=crop", categoria: "Música", organizador: "Bar do Zeca", preco: "R$ 10 (Couvert)", publico_alvo: "Jovens e Adultos", tags: ["Música ao Vivo", "Rock", "Happy Hour"] },
-        { id: "evento-04", cidade: "Rio Claro", nome: "Cinema na Praça: Clássicos dos Anos 80", descricao: "Uma noite de nostalgia sob as estrelas! A Prefeitura de Rio Claro apresenta 'Cinema na Praça' com a exibição do clássico dos anos 80, 'De Volta para o Futuro'. Traga sua cadeira de praia, um cobertor quentinho e a pipoca para curtir este filme icônico em um telão ao ar livre. Evento gratuito e para toda a família.", data_inicio: "2025-08-01T19:30:00-03:00", data_fim: "2025-08-01T21:30:00-03:00", local: "Anfiteatro do Parque", imagem: "https://images.unsplash.com/photo-1533928298208-27ff66855f30?q=80&w=800&auto=format&fit=crop", categoria: "Lazer", organizador: "Prefeitura de Rio Claro", preco: "Gratuito", publico_alvo: "Famílias", tags: ["Cinema", "Ao ar livre", "Nostalgia"] },
-        { id: "evento-05", cidade: "Rio Claro", nome: "1º Festival de Food Truck", descricao: "O 1º Festival de Food Truck de Rio Claro chegou! Os melhores sabores sobre rodas estarão reunidos no Parque da Cidade, oferecendo uma variedade incrível de hambúrgueres artesanais, crepes, churros gourmet e muito mais. Além da gastronomia, o evento contará com shows de bandas locais todos os dias. Entrada franca!", data_inicio: "2025-08-08T17:00:00-03:00", data_fim: "2025-08-10T23:00:00-03:00", local: "Parque da Cidade", imagem: "https://images.unsplash.com/photo-1576020573839-2a9551a3a339?q=80&w=800&auto=format&fit=crop", categoria: "Festa", popular: true, organizador: "Food Truck Fest Eventos", preco: "Entrada Franca", publico_alvo: "Todos os públicos", tags: ["Gastronomia", "Música ao Vivo", "Lazer"] }
-    ],
-    treasureHunts: [
-        {
-            id: 'hunt-01',
-            cidade: 'Rio Claro',
-            companyId: 'empresa-01',
-            title: 'O Segredo do Forno a Lenha',
-            clue: 'Onde o cheiro de manjericão fresco se mistura com a lenha a queimar, encontre o nosso ingrediente secreto.',
-            question: 'Qual é o lema italiano escrito na parede acima do forno?',
-            answer: 'La vita è una combinazione di magia e pasta',
-            reward: '15% de desconto na sua próxima pizza grande!',
-            points: 50
-        },
-        {
-            id: 'hunt-02',
-            cidade: 'Lídice',
-            companyId: 'Salgaderia MB',
-            title: 'O Tesouro Crocante',
-            clue: 'No coração da praça, procure o lugar que transforma a felicidade em salgados dourados.',
-            question: 'Quantos tipos diferentes de coxinha estão no nosso menu hoje?',
-            answer: '4',
-            reward: 'Compre 5 salgados e leve 6!',
-            points: 50
+            id: "empresa-li-02", cidade: "Lídice", nome: "Mercearia do Zé", logotipo: "https://placehold.co/200x200/78909C/ffffff?text=MZ",
+            descricao: "O ponto de encontro do distrito. Temos de tudo um pouco: secos e molhados, frios, bebidas e aquela conversa boa.",
+            endereco: { rua: "Rua Principal, 10", bairro: "Centro", cidade: "Lídice", lat: -22.774, lon: -44.200 },
+            contato: { whatsapp: "+5524967890123" },
+            horario_funcionamento: { segunda: "07:00-19:00", terca: "07:00-19:00", quarta: "07:00-19:00", quinta: "07:00-19:00", sexta: "07:00-19:00", sabado: "07:00-17:00" },
+            categorias: ["Comércio", "Supermercados"], palavras_chave: ["mercado", "mercearia", "compras", "bebidas"],
+            galeria_fotos: ["https://www.infomoney.com.br/wp-content/uploads/2021/04/bares-restaurantes-abre-e-fecha-governo-de-sao-paulo.jpg"],
+            avaliacoes: [{ usuario: "Dona Cida", nota: 5, comentario: "O Zé sempre tem o que a gente precisa. Uma mão na roda!" }],
+            plano: "normal", data_cadastro: "2025-06-10T07:00:00Z", destaques: ["Pão Fresco de Manhã", "Queijo da Região"], verificado: false
         }
     ],
-    jobs: [],
+    events: [
+        { id: "evento-rc-01", cidade: "Rio Claro - RJ", nome: "Festival do Vale do Café", descricao: "Rio Claro participa do tradicional festival com concertos de música clássica e instrumental nas fazendas históricas. Uma experiência única!", data_inicio: "2025-07-25T19:00:00-03:00", data_fim: "2025-07-27T22:00:00-03:00", local: "Fazendas da Região", imagem: "https://www.festivalvaledocafe.com/wp-content/uploads/2023/07/2023-06-23-0005-scaled.jpg", categoria: "Cultura", popular: true, organizador: "Associação do Vale do Café", preco: "Consultar", publico_alvo: "Adultos", tags: ["Música Clássica", "História", "Gastronomia"] },
+        { id: "evento-li-01", cidade: "Lídice", nome: "Festa de Santo Antônio do Capivari", descricao: "A tradicional festa do antigo padroeiro do distrito, com missa, procissão, leilão de gado, shows de forró e barracas com comidas típicas.", data_inicio: "2025-06-13T18:00:00-03:00", data_fim: "2025-06-15T23:59:00-03:00", local: "Praça de Lídice", imagem: "https://www.prefeituraderioclaro.com.br/images/noticias/noticia_5331_1.jpg", categoria: "Festa", popular: true, organizador: "Comunidade Local", preco: "Gratuito", publico_alvo: "Famílias", tags: ["Festa Junina", "Tradição", "Música ao Vivo"] }
+    ],
+    jobs: [
+        { id: "vaga-rc-01", cidade: "Rio Claro - RJ", title: "Recepcionista de Pousada (Fim de Semana)", company: "Pousada Recanto das Águas", description: "Buscamos uma pessoa comunicativa e organizada para recepcionar nossos hóspedes aos fins de semana. Necessário ser proativo e gostar de lidar com o público.", requirements: ["Ensino Médio Completo", "Boa comunicação", "Disponibilidade aos Sábados e Domingos"], contact: "rh.recanto@example.com" }
+    ],
     careerGuide: {
         highSchool: {
             intro: "O ensino médio é a fase perfeita para explorar, descobrir paixões e começar a desenhar o mapa do seu futuro. Não tenha pressa para decidir, mas aproveite para experimentar!",
@@ -777,8 +494,23 @@ const DB = {
                 { id: "courses", icon: "🌐", title: "Cursos Online Gratuitos", description: "Plataformas como Coursera, edX e a Fundação Bradesco oferecem cursos para turbinar seu conhecimento." },
             ]
         },
+        localOpportunities: {
+            intro: "A região de Rio Claro é um polo de turismo, agronegócio e serviços. Conhecer as vocações locais pode te ajudar a escolher uma carreira com grande potencial de crescimento aqui mesmo.",
+            professions: [
+                { icon: "🏕️", title: "Turismo e Hotelaria", description: "O coração da economia local. Carreiras como guia turístico, recepcionista de hotel/pousada e gestor de eventos são sempre requisitadas.", needs: "Cursos técnicos em turismo/hotelaria, graduação em Turismo." },
+                { icon: "🌱", title: "Agronegócio", description: "Da agricultura familiar à pecuária, a região é forte no campo. Profissionais como técnico agrícola e zootecnista encontram boas oportunidades.", needs: "Cursos técnicos (SENAR), graduação em Agronomia." },
+                { icon: "❤️‍🩹", title: "Saúde e Bem-estar", description: "Com o crescimento da população e do turismo, a demanda por enfermeiros, técnicos em enfermagem e fisioterapeutas só aumenta.", needs: "Cursos técnicos e graduação na área da saúde." },
+                { icon: "🛠️", title: "Serviços Locais", description: "Toda cidade precisa de bons profissionais de serviços: eletricistas, mecânicos, cabeleireiros e cozinheiros são essenciais para a comunidade.", needs: "Cursos profissionalizantes, experiência prática." },
+            ],
+            institutions: [
+                { name: "FAETERJ - Barra Mansa (próximo)", link: "https://www.faeterj-bm.com.br/" },
+                { name: "CEFET/RJ - Valença (próximo)", link: "https://www.cefet-rj.br/index.php/valenca" },
+                { name: "SENAR Rio de Janeiro", link: "https://www.senarj.org.br/" },
+                { name: "CVT - Rio Claro (Centro Vocacional Tecnológico)", link: "#" }
+            ]
+        },
         entrepreneurship: {
-            intro: "Sonha em ser seu próprio chefe? Empreender é transformar uma paixão em um negócio que gera valor para a comunidade. Nossa região é um terreno fértil para novas ideias, conectando o turismo, a gastronomia e os serviços locais. Aqui você encontrará um guia prático para dar vida ao seu projeto.",
+            intro: "Sonha em ser seu próprio chefe? Empreender é transformar uma paixão em um negócio que gera valor para a comunidade. A região de Rio Claro é um terreno fértil para novas ideias, conectando o turismo, o agronegócio e os serviços locais. Aqui você encontrará um guia prático para dar vida ao seu projeto.",
             firstSteps: [
                 { icon: "💡", title: "Valide Sua Ideia", description: "Antes de tudo, converse com potenciais clientes. Sua ideia resolve um problema real? As pessoas pagariam por isso? Um bom termômetro é criar um grupo de WhatsApp e ver o interesse." },
                 { icon: "📝", title: "Plano de Negócios Simples", description: "Esqueça documentos complexos. Responda: O que eu vendo? Para quem? Onde? Como vou divulgar? Quanto preciso para começar e qual será meu preço?" },
@@ -786,39 +518,40 @@ const DB = {
                 { icon: "🚀", title: "Divulgue Seu Negócio", description: "Use o poder das redes sociais (Instagram é essencial!), crie um Perfil de Empresa no Google Maps (é grátis!) e participe de feiras e eventos locais para se tornar conhecido." }
             ],
             businessIdeas: [
-                { icon: "🏞️", title: "Turismo de Experiência", description: "Crie roteiros guiados para as cachoeiras, trilhas históricas ou fazendas de café. Ofereça um serviço que vá além do passeio, contando as lendas e a história local." },
-                { icon: "🛍️", title: "E-commerce Local", description: "Venda produtos da região (doces, artesanato, queijos) online. Comece com um perfil no Instagram/WhatsApp e expanda para um site simples." },
-                { icon: "🛠️", title: "Serviços para o Lar", description: "Com muitas pessoas trabalhando de casa, serviços de qualidade como limpeza, pequenos reparos, jardinagem e montagem de móveis são muito procurados." },
-                { icon: "📱", title: "Marketing Digital para Pequenos Negócios", description: "Muitos comerciantes locais não sabem como usar a internet para vender mais. Ofereça serviços de gestão de redes sociais, criação de anúncios e fotografia de produtos." }
+                { icon: "🚵", title: "Ecoturismo e Aventura", description: "Crie roteiros guiados de trilhas para as cachoeiras, oferecendo pacotes com lanche (piquenique) e transporte." },
+                { icon: "🧀", title: "Cestas de Produtos da Roça", description: "Monte e venda cestas com os melhores produtos da região (queijos, doces, cachaças, café) e entregue em domicílio." },
+                { icon: "📸", title: "Fotografia de Natureza e Eventos", description: "A beleza da região é um cenário perfeito para ensaios fotográficos. Ofereça seus serviços para turistas e em eventos locais." },
+                { icon: "📱", title: "Marketing Digital para Pousadas", description: "Muitas pousadas e restaurantes locais não sabem como usar a internet para atrair mais turistas. Ofereça serviços de gestão de redes sociais e criação de anúncios." }
             ],
             commonChallenges: [
-                { title: "Conseguir os Primeiros Clientes", tip: "Comece com amigos e familiares, peça indicações e ofereça uma promoção de lançamento. Um bom trabalho inicial gera propaganda boca a boca, a mais poderosa de todas." },
+                { title: "Sazonalidade do Turismo", tip: "Crie promoções e eventos na baixa temporada para atrair o público local e de cidades vizinhas. Parcerias com empresas podem garantir um fluxo constante." },
                 { title: "Medo de Fracassar", tip: "Encare cada passo como um aprendizado. Comece pequeno para que os riscos sejam controlados. Lembre-se: feito é melhor que perfeito. O importante é começar." },
                 { title: "Misturar Finanças", tip: "Desde o primeiro dia, tenha uma conta bancária separada para o negócio, mesmo que seja uma conta digital gratuita. Anote todas as entradas e saídas em uma planilha simples." }
             ],
             localStories: [
-                { name: "Dona Elza", business: "Doceria Sabores da Roça", photo: "https://images.unsplash.com/photo-1611601339845-8c736398971f?q=80&w=800", story: "Dona Elza começou vendendo seus famosos bolos de fubá para vizinhos. Com o sucesso, abriu uma pequena loja em Rio Claro que hoje é ponto de parada obrigatório para moradores e turistas, mostrando que a tradição pode virar um grande negócio." },
-                { name: "João da Silva", business: "Sulnet Telecom", photo: "https://randomuser.me/api/portraits/men/45.jpg", story: "Percebendo a carência de internet de qualidade na região, João, um engenheiro de telecomunicações, iniciou a Sulnet com uma única antena. Hoje, sua empresa conecta milhares de pessoas, provando que uma necessidade local pode se transformar em uma oportunidade de empreendimento de sucesso." }
+                 { name: "Ana", business: "Delícias da Vovó", photo: "https://images.unsplash.com/photo-1558522195-e1a911434645?q=80&w=800", story: "Ana começou vendendo os doces de compota que sua avó ensinou na feira de domingo. O sucesso foi tanto que hoje ela tem um pequeno café no centro de Rio Claro e fornece seus quitutes para as pousadas da região, mostrando que a tradição local é um grande negócio." },
+                 { name: "Pedro", business: "Rio Claro Aventuras", photo: "https://randomuser.me/api/portraits/men/50.jpg", story: "Amante de trilhas, Pedro começou a guiar amigos para as cachoeiras de Lídice. Hoje, sua pequena empresa 'Rio Claro Aventuras' é a principal referência de ecoturismo, oferecendo roteiros seguros e experiências inesquecíveis na Mata Atlântica." }
             ],
             resources: [
                 { name: "Sebrae", link: "https://sebrae.com.br/", description: "A principal referência para pequenos negócios no Brasil. Oferece cursos, consultorias e materiais gratuitos." },
                 { name: "Portal do Empreendedor", link: "https://www.gov.br/empresas-e-negocios/pt-br/empreendedor", description: "O site oficial do governo para abrir, gerenciar e dar baixa no seu MEI." },
-                { name: "SynkLocal Anuncie", link: "https://wa.me/5524936180096", description: "Dê visibilidade ao seu novo negócio em nossa plataforma. Fale conosco para conhecer os planos." }
+                { name: "SynkLocal - Negócios e Carreiras", link: "https://www.instagram.com/synknegociosecarreiras/", description: "Siga nosso Instagram para dicas de carreira, vagas e insights sobre empreendedorismo local." },
+                { name: "Anuncie no SynkLocal", link: "https://wa.me/5524936180096", description: "Dê visibilidade ao seu novo negócio em nossa plataforma. Fale conosco para conhecer os planos." }
             ]
         },
         cvModel: `
             <div class="bg-gray-50 p-4 sm:p-6 rounded-lg border">
                 <div class="text-center mb-6">
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">Maria da Silva</h1>
-                    <p>Brasileira, Solteira, 18 anos</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800">João da Silva</h1>
+                    <p>Brasileiro, Solteiro, 18 anos</p>
                     <p>Rua das Flores, 123, Centro, Rio Claro - RJ</p>
-                    <p>(24) 99999-8888 | maria.silva.email@example.com</p>
-                    <p><a href="https://linkedin.com/in/mariadasilva" class="text-blue-600 hover:underline">linkedin.com/in/mariadasilva</a></p>
+                    <p>(24) 99999-8888 | joao.silva.email@example.com</p>
+                    <p><a href="https://linkedin.com/in/joaodasilva" class="text-blue-600 hover:underline">linkedin.com/in/joaodasilva</a></p>
                 </div>
 
                 <div class="mb-6">
                     <h2 class="text-lg sm:text-xl font-bold text-[var(--primary-dark)] border-b-2 border-teal-200 pb-1 mb-2">OBJETIVO</h2>
-                    <p>Busco minha primeira oportunidade de emprego para desenvolver minhas habilidades, aprender na prática e contribuir de forma proativa para o crescimento da empresa.</p>
+                    <p>Busco minha primeira oportunidade de emprego para desenvolver minhas habilidades, aprender na prática e contribuir de forma proativa para o crescimento da empresa, preferencialmente na área de atendimento ao público ou turismo.</p>
                 </div>
 
                 <div class="mb-6">
@@ -829,16 +562,14 @@ const DB = {
 
                 <div class="mb-6">
                     <h2 class="text-lg sm:text-xl font-bold text-[var(--primary-dark)] border-b-2 border-teal-200 pb-1 mb-2">EXPERIÊNCIA</h2>
-                    <p><strong>Voluntária em Evento Escolar (Junho/2024)</strong><br>
-                    - Ajudei na organização e recepção da Festa Junina da escola, responsável pela barraca de doces e pelo controle do caixa.</p>
-                    <p class="mt-2"><strong>Aulas de Reforço (2023-2024)</strong><br>
-                    - Ofereci aulas de reforço de matemática para alunos do ensino fundamental, desenvolvendo paciência e didática.</p>
+                    <p><strong>Voluntário em Evento (Junho/2024)</strong><br>
+                    - Ajudei na organização da festa junina da comunidade, responsável pela barraca de jogos e pelo controle das fichas.</p>
                 </div>
 
                 <div class="mb-6">
                     <h2 class="text-lg sm:text-xl font-bold text-[var(--primary-dark)] border-b-2 border-teal-200 pb-1 mb-2">HABILIDADES</h2>
                     <ul class="list-disc list-inside space-y-1">
-                        <li><strong>Idiomas:</strong> Inglês Intermediário (Cursando)</li>
+                        <li><strong>Idiomas:</strong> Inglês Básico</li>
                         <li><strong>Informática:</strong> Pacote Office (Word, Excel, PowerPoint), Canva, Redes Sociais.</li>
                         <li><strong>Competências:</strong> Proatividade, boa comunicação, organização, aprendo rápido e gosto de trabalhar em equipe.</li>
                     </ul>
@@ -851,11 +582,15 @@ const DB = {
 const State = {
     chartInstance: null,
     currentCity: null,
+    currentView: 'city-selection',
+    previousView: null,
     currentFilters: { searchTerm: '', category: '', neighborhood: [], status: 'all' },
     foodGuideFilters: { searchTerm: '', delivery: false, acceptsReservations: false, outdoorSeating: false },
     eventFilter: 'Todos',
     countdownIntervals: [],
-    completedHunts: [], 
+    tourismMap: null, // Para guardar a instância do mapa
+    routingControl: null, // Para guardar a instância da rota
+    tourismFilter: 'Todos', // Para o filtro de pontos turísticos
     
     clearCountdownIntervals() {
         this.countdownIntervals.forEach(clearInterval);
@@ -863,7 +598,13 @@ const State = {
     },
 
     clearMapInstances() {
-        // Map instances cleared if needed in the future
+        if (this.tourismMap) {
+            this.tourismMap.remove();
+            this.tourismMap = null;
+        }
+        if(this.routingControl) {
+            this.routingControl = null;
+        }
     }
 };
 
@@ -878,8 +619,13 @@ const App = {
     },
 
     navigateTo(view, data) {
+        if(State.currentView !== view) {
+            State.previousView = State.currentView;
+        }
+        State.currentView = view;
+
         State.clearCountdownIntervals();
-        State.clearMapInstances();
+        State.clearMapInstances(); // Limpa mapas ao navegar
         UI.showView(view);
         window.scrollTo(0, 0);
 
@@ -893,12 +639,6 @@ const App = {
                 case 'home':
                     UI.updateHeader(`Guia de ${State.currentCity}`, true);
                     UI.renderHomeContent();
-                    break;
-                case 'treasure-hunt':
-                    UI.renderTreasureHuntPage();
-                    break;
-                case 'treasure-details':
-                    UI.renderTreasureDetails(data);
                     break;
                 case 'culture':
                     UI.renderCulturePage(data);
@@ -922,6 +662,15 @@ const App = {
         }, 50); 
     },
 
+    navigateBack() {
+        const targetView = State.previousView || 'home';
+        if (targetView === 'details') {
+            this.navigateTo('home');
+        } else {
+            this.navigateTo(targetView);
+        }
+    },
+
     selectCity(cityName) {
         State.currentCity = cityName;
         this.navigateTo('home');
@@ -943,34 +692,39 @@ const App = {
         State.eventFilter = category;
         UI.renderEventsPage();
     },
-
-    handleTreasureAnswer(huntId) {
-        const hunt = DB.treasureHunts.find(h => h.id === huntId);
-        const input = document.getElementById(`treasure-answer-${huntId}`);
-        const userAnswer = input.value.trim();
-
-        if (userAnswer.toLowerCase() === hunt.answer.toLowerCase()) {
-            this.completeTreasure(huntId);
-        } else {
-            const feedbackEl = document.getElementById(`treasure-feedback-${huntId}`);
-            feedbackEl.textContent = 'Resposta incorreta. Tente novamente!';
-            feedbackEl.classList.remove('hidden');
-            input.classList.add('border-red-500');
-            input.classList.remove('border-gray-300');
-            setTimeout(() => {
-                feedbackEl.classList.add('hidden');
-                input.classList.remove('border-red-500');
-                input.classList.add('border-gray-300');
-            }, 3000);
-        }
+    
+    filterTourismSpots(category) {
+        State.tourismFilter = category;
+        UI.renderCultureTourismTab(false); // Re-renderiza sem reinicializar o mapa
     },
     
-    completeTreasure(huntId) {
-        const hunt = DB.treasureHunts.find(h => h.id === huntId);
-        if (!State.completedHunts.includes(huntId)) {
-            State.completedHunts.push(huntId);
+    showItineraryOnMap(itineraryId) {
+        const city = DB.cities.find(c => c.name === State.currentCity);
+        const itinerary = city.culture.tourism.itineraries.find(i => i.id === itineraryId);
+        if (!itinerary || !State.tourismMap) return;
+
+        if (State.routingControl) {
+            State.tourismMap.removeControl(State.routingControl);
         }
-        UI.showTreasureSuccess(hunt);
+
+        const waypoints = itinerary.spots.map(spotName => {
+            const spot = city.culture.tourism.spots.find(s => s.name === spotName);
+            return L.latLng(spot.lat, spot.lon);
+        });
+
+        State.routingControl = L.Routing.control({
+            waypoints: waypoints,
+            routeWhileDragging: true,
+            show: false, // Esconde o painel de direções
+            addWaypoints: false, // Impede que o usuário adicione novos pontos
+            lineOptions: {
+                styles: [{ color: '#26A69A', opacity: 0.8, weight: 6 }]
+            }
+        }).addTo(State.tourismMap);
+
+        // Foca o mapa na rota
+        const bounds = L.latLngBounds(waypoints);
+        State.tourismMap.fitBounds(bounds, { padding: [50, 50] });
     },
 
     applyFilters() {
@@ -989,7 +743,9 @@ const App = {
                 neighborhood: [], 
                 status: 'all' 
             };
-            document.getElementById('search-input-results').value = State.currentFilters.searchTerm;
+            if(document.getElementById('search-input-results')) {
+                document.getElementById('search-input-results').value = State.currentFilters.searchTerm;
+            }
         }
 
         const filteredCompanies = DB.companies.filter(company => {
@@ -1001,7 +757,14 @@ const App = {
                 company.descricao.toLowerCase().includes(searchTerm) ||
                 (company.palavras_chave && company.palavras_chave.some(k => k.toLowerCase().includes(searchTerm))) : true;
             
-            const matchesCategory = State.currentFilters.category ? company.categorias.includes(State.currentFilters.category) : true;
+            let matchesCategory = true; // Inicia como verdadeiro
+                if (State.currentFilters.category === 'Promoções') {
+                    // Se a categoria for 'Promoções', o critério é ter uma promoção
+                    matchesCategory = !!company.promotion;
+                } else if (State.currentFilters.category) {
+                    // Para todas as outras categorias, usa a lógica original
+                    matchesCategory = company.categorias.includes(State.currentFilters.category);
+                }
             const matchesNeighborhood = State.currentFilters.neighborhood.length > 0 ? State.currentFilters.neighborhood.includes(company.endereco.bairro) : true;
             const matchesStatus = State.currentFilters.status === 'open' ? Utils.isCompanyOpen(company) : true;
 
@@ -1017,7 +780,7 @@ const App = {
         State.foodGuideFilters.acceptsReservations = document.getElementById('food-filter-reservations').checked;
         State.foodGuideFilters.outdoorSeating = document.getElementById('food-filter-outdoor').checked;
         
-        UI.renderFoodGuidePage(); // Re-render the page with applied filters
+        UI.renderFoodGuidePage();
     },
 
     openQuoteModal(companyId) {
@@ -1049,11 +812,12 @@ const UI = {
 
     updateHeader(title, showNav) {
         document.getElementById('main-title').textContent = title;
-        const navItems = ['nav-home', 'nav-treasure', 'nav-culture', 'nav-events', 'nav-careers', 'change-city-btn'];
+        const navItems = ['nav-home', 'nav-culture', 'nav-events', 'nav-careers', 'change-city-btn'];
         navItems.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.toggle('hidden', !showNav);
         });
+        document.getElementById('mobile-menu-button').classList.toggle('hidden', !showNav);
     },
 
     toggleMobileMenu() {
@@ -1091,7 +855,7 @@ const UI = {
                 <h2 id="home-title" class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 tracking-tight">O que você procura em ${State.currentCity}?</h2>
                 <p class="text-gray-500 max-w-2xl mx-auto mb-8 text-sm sm:text-base">Explore o comércio local, descubra serviços incríveis e fique por dentro dos melhores eventos.</p>
                 <div class="max-w-xl mx-auto flex flex-col sm:flex-row shadow-lg shadow-teal-200/50 rounded-full">
-                    <input id="search-input-home" type="text" placeholder="Ex: pizzaria, show..." class="w-full p-3 sm:p-4 border border-gray-200 rounded-full sm:rounded-none sm:rounded-l-full focus:ring-2 focus:ring-[var(--primary)] focus:outline-none transition-shadow mb-2 sm:mb-0">
+                    <input id="search-input-home" type="text" placeholder="Ex: restaurante, pousada, cachoeira..." class="w-full p-3 sm:p-4 border border-gray-200 rounded-full sm:rounded-none sm:rounded-l-full focus:ring-2 focus:ring-[var(--primary)] focus:outline-none transition-shadow mb-2 sm:mb-0">
                     <button onclick="App.performSearch(true, 'search-input-home')" class="w-full sm:w-auto bg-[var(--primary)] text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full sm:rounded-none sm:rounded-r-full font-semibold hover:bg-[var(--primary-dark)] transition-colors transform active:scale-95">Buscar</button>
                 </div>
             </section>
@@ -1129,7 +893,7 @@ const UI = {
         this.renderNew();
     },
 
-     renderWelcomeSection() {
+    renderWelcomeSection() {
         const container = document.getElementById('welcome-section');
         if (!container) return;
         container.innerHTML = `
@@ -1140,131 +904,13 @@ const UI = {
                     <p class="text-gray-600 mb-6 flex-grow text-sm sm:text-base">Encontre tudo o que precisa, veja as novidades e aproveite as melhores promoções da sua cidade.</p>
                     <span class="mt-auto bg-teal-100 text-teal-800 px-6 py-2 rounded-full font-bold text-sm sm:text-base">Explorar o Comércio</span>
                 </div>
-                <div class="bg-white rounded-3xl shadow-lg p-6 sm:p-8 text-center flex flex-col items-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer" onclick="App.navigateTo('culture')">
+                <div class="bg-white rounded-3xl shadow-lg p-6 sm:p-8 text-center flex flex-col items-center transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl cursor-pointer" onclick="App.navigateTo('culture', { tab: 'tourism' })">
                     <div class="text-5xl mb-4">🧭</div>
                     <h3 class="text-xl sm:text-2xl font-bold text-gray-800 mb-3">Sou visitante</h3>
-                    <p class="text-gray-600 mb-6 flex-grow text-sm sm:text-base">Descubra os pontos turísticos, a cultura e tudo que faz de ${State.currentCity} um lugar encantador.</p>
+                    <p class="text-gray-600 mb-6 flex-grow text-sm sm:text-base">Descubra as fazendas históricas, a cultura e tudo que faz de ${State.currentCity} um lugar encantador.</p>
                     <span class="mt-auto bg-amber-100 text-amber-800 px-6 py-2 rounded-full font-bold text-sm sm:text-base">Descobrir a Região</span>
                 </div>
             </section>
-        `;
-    },
-
-    renderTreasureHuntPage() {
-        const container = document.getElementById('treasure-hunt-content');
-        const huntsInCity = DB.treasureHunts.filter(h => h.cidade === State.currentCity);
-
-        if (huntsInCity.length === 0) {
-            container.innerHTML = `
-                <div class="text-center bg-white p-10 rounded-2xl shadow-lg">
-                    <h2 class="text-2xl sm:text-3xl font-bold mb-4">Caça ao Tesouro 🗺️</h2>
-                    <p class="text-gray-500">Nenhuma caça ao tesouro disponível em ${State.currentCity} no momento. Volte em breve!</p>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = `
-            <div class="text-center mb-10">
-                <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-3 text-[var(--text-main)] tracking-tight">Caça ao Tesouro em ${State.currentCity}</h2>
-                <p class="text-base sm:text-lg text-gray-500 max-w-3xl mx-auto">Explore a cidade, desvende enigmas e ganhe prêmios exclusivos no comércio local!</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                ${huntsInCity.map(hunt => {
-                    const company = DB.companies.find(c => c.id === hunt.companyId);
-                    const isCompleted = State.completedHunts.includes(hunt.id);
-                    return `
-                    <div class="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col group transition-all duration-300 ${isCompleted ? 'opacity-60' : 'hover:shadow-2xl hover:-translate-y-2'}">
-                        <div class="p-6 flex-grow flex flex-col">
-                            <div class="flex items-center mb-4">
-                                <img src="${company.logotipo}" alt="Logo de ${company.nome}" class="w-12 h-12 rounded-full mr-4 border">
-                                <div>
-                                    <h4 class="font-bold">${company.nome}</h4>
-                                    <p class="text-xs text-gray-500">Tesouro Local</p>
-                                </div>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-2 flex-grow">${hunt.title}</h3>
-                            <p class="text-gray-600 text-sm mb-4"><i class="fa-solid fa-lightbulb mr-2 text-amber-500"></i><strong>Pista:</strong> "${hunt.clue}"</p>
-                            <div class="mt-auto">
-                                ${isCompleted ? `
-                                    <div class="w-full bg-green-500 text-white text-center px-4 py-2 rounded-lg font-semibold">
-                                        <i class="fa-solid fa-check-circle mr-2"></i> Concluído!
-                                    </div>
-                                ` : `
-                                    <button onclick="App.navigateTo('treasure-details', '${hunt.id}')" class="w-full bg-amber-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-amber-600 transition-colors">
-                                        Resolver Enigma <i class="fa-solid fa-arrow-right ml-2"></i>
-                                    </button>
-                                `}
-                            </div>
-                        </div>
-                    </div>
-                    `;
-                }).join('')}
-            </div>
-        `;
-    },
-
-    renderTreasureDetails(huntId) {
-        const container = document.getElementById('treasure-details-view');
-        const hunt = DB.treasureHunts.find(h => h.id === huntId);
-        if (!hunt) {
-            container.innerHTML = '<p>Caça ao tesouro não encontrada.</p>';
-            return;
-        }
-        const company = DB.companies.find(c => c.id === hunt.companyId);
-
-        container.innerHTML = `
-            <button onclick="App.navigateTo('treasure-hunt')" class="bg-white text-gray-800 px-4 py-2 rounded-full mb-6 hover:bg-gray-100 transition-all shadow-md active:scale-95 text-sm">← Voltar para a lista</button>
-            <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-10">
-                <div class="text-center">
-                    <img src="${company.logotipo}" alt="Logo de ${company.nome}" class="w-24 h-24 rounded-full mx-auto mb-4 border-2 shadow-lg">
-                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight">${hunt.title}</h2>
-                    <p class="text-gray-500">Um desafio proposto por <strong class="text-teal-600 cursor-pointer" onclick="App.navigateTo('details', '${company.id}')">${company.nome}</strong></p>
-                </div>
-
-                <div class="my-8 p-6 bg-amber-50 rounded-xl border-l-4 border-amber-400">
-                    <h3 class="font-bold text-lg text-amber-800 mb-2"><i class="fa-solid fa-map-signs mr-2"></i>Sua Missão</h3>
-                    <p class="text-gray-700">${hunt.clue}</p>
-                </div>
-
-                <div class="my-8">
-                    <h3 class="font-bold text-lg text-gray-800 mb-2"><i class="fa-solid fa-question-circle mr-2 text-teal-500"></i>O Enigma a ser Resolvido:</h3>
-                    <p class="text-gray-700 text-lg italic p-4 bg-gray-100 rounded-lg">"${hunt.question}"</p>
-                </div>
-                
-                <div class="mt-6">
-                    <label for="treasure-answer-${hunt.id}" class="block font-semibold mb-2">Sua Resposta:</label>
-                    <input id="treasure-answer-${hunt.id}" type="text" placeholder="Digite a resposta aqui..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500">
-                    <p id="treasure-feedback-${hunt.id}" class="text-red-500 text-sm mt-2 hidden"></p>
-                    <button onclick="App.handleTreasureAnswer('${hunt.id}')" class="w-full mt-4 bg-teal-500 text-white px-6 py-3 rounded-lg font-bold text-lg hover:bg-teal-600 transition-colors">
-                        <i class="fa-solid fa-unlock-alt mr-2"></i> Desvendar!
-                    </button>
-                </div>
-            </div>
-        `;
-    },
-
-    showTreasureSuccess(hunt) {
-        const container = document.getElementById('treasure-details-view');
-        const company = DB.companies.find(c => c.id === hunt.companyId);
-
-        container.innerHTML = `
-            <div class="text-center bg-white rounded-2xl shadow-2xl p-8 md:p-12 transform transition-all duration-500 animate-pulse-once" style="--tw-animate-opacity: 1; --tw-animate-scale: 1.05;">
-                <div class="text-6xl mb-4">🎉</div>
-                <h2 class="text-3xl font-extrabold text-green-500 mb-3">Parabéns!</h2>
-                <p class="text-lg text-gray-700">Você desvendou o enigma de <strong>${company.nome}</strong>!</p>
-                
-                <div class="my-8 p-6 bg-amber-100 border-2 border-dashed border-amber-400 rounded-xl">
-                    <h3 class="font-bold text-amber-800">Sua Recompensa:</h3>
-                    <p class="text-2xl font-bold text-amber-900 mt-2">${hunt.reward}</p>
-                    <p class="text-xs text-amber-700 mt-2">Apresente esta tela no estabelecimento para resgatar.</p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <button onclick="App.navigateTo('treasure-hunt')" class="w-full sm:w-auto bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">Ver Outros Tesouros</button>
-                    <button onclick="App.navigateTo('details', '${company.id}')" class="w-full sm:w-auto bg-teal-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-600 transition-colors">Visitar a Empresa</button>
-                </div>
-            </div>
         `;
     },
 
@@ -1327,15 +973,13 @@ const UI = {
 
     _createCompanyCard(company) {
         const verifiedIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1.5 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zM9 12a1 1 0 112 0 1 1 0 01-2 0zm-1-3a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>`;
-        const treasureIcon = `<div class="absolute top-2 right-2 bg-amber-400 text-white p-1.5 rounded-full shadow-md" title="Faz parte da Caça ao Tesouro!"><i class="fa-solid fa-gem"></i></div>`;
-        const hasTreasure = DB.treasureHunts.some(h => h.companyId === company.id && h.cidade === State.currentCity);
 
         return `
         <div class="bg-white rounded-2xl shadow-lg shadow-teal-100/50 overflow-hidden flex flex-col h-full group transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/60 hover:-translate-y-2">
             <div class="relative overflow-hidden cursor-pointer" onclick="App.navigateTo('details', '${company.id}')">
-                <img src="${company.galeria_fotos[0]}" alt="${company.nome}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500">
+                <img src="${company.galeria_fotos[0]}" alt="${company.nome}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                ${hasTreasure ? treasureIcon : ''}
+                ${Utils.getOpenStatusBadge(company)}
                 <div class="absolute bottom-2 left-4 text-white">
                     <h4 class="font-bold text-lg flex items-center drop-shadow-md">${company.nome} ${company.verificado ? verifiedIcon : ''}</h4>
                     <p class="text-teal-200 text-sm drop-shadow-md">${company.categorias[0]}</p>
@@ -1355,13 +999,13 @@ const UI = {
     
     _createCarouselCard(company) {
         const verifiedIcon = `<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1.5 text-blue-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zM9 12a1 1 0 112 0 1 1 0 01-2 0zm-1-3a1 1 0 00-1 1v1a1 1 0 102 0v-1a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>`;
-        const treasureIcon = `<div class="absolute top-2 right-2 bg-amber-400 text-white p-1 rounded-full shadow-md" title="Faz parte da Caça ao Tesouro!"><i class="fa-solid fa-gem text-xs"></i></div>`;
-        const hasTreasure = DB.treasureHunts.some(h => h.companyId === company.id && h.cidade === State.currentCity);
         return `
         <div class="flex-shrink-0 w-64 sm:w-72 bg-white rounded-2xl shadow-md shadow-teal-100/40 overflow-hidden transform hover:scale-105 transition-transform group duration-300 hover:shadow-xl hover:shadow-teal-200/50">
             <div onclick="App.navigateTo('details', '${company.id}')" class="cursor-pointer relative">
-                ${hasTreasure ? treasureIcon : ''}
-                <div class="overflow-hidden h-36"><img src="${company.galeria_fotos[0]}" alt="${company.nome}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"></div>
+                <div class="overflow-hidden h-36">
+                    <img src="${company.galeria_fotos[0]}" alt="${company.nome}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
+                    ${Utils.getOpenStatusBadge(company, 'absolute top-2 right-2')}
+                </div>
                 <div class="p-4">
                     <h4 class="font-bold text-md truncate flex items-center">${company.nome} ${company.verificado ? verifiedIcon : ''}</h4>
                     <p class="text-teal-600 text-sm truncate">${company.categorias[1] || company.categorias[0]}</p>
@@ -1406,7 +1050,7 @@ const UI = {
         return `
         <div class="bg-white rounded-2xl shadow-lg shadow-teal-100/50 overflow-hidden flex flex-col h-full group transform hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl hover:shadow-teal-200/60">
             <div class="relative">
-                <img src="${event.imagem}" alt="${event.nome}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+                <img src="${event.imagem}" alt="${event.nome}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500" onerror="this.onerror=null;this.src='https://placehold.co/800x600/cccccc/ffffff?text=Evento';">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
                 ${statusHTML}
                 <div class="absolute top-3 right-3 bg-white/90 text-teal-800 text-xs font-bold px-3 py-1.5 rounded-full backdrop-blur-sm shadow-md">${event.categoria}</div>
@@ -1572,13 +1216,11 @@ const UI = {
             let sobreNosHTML = '';
 
             if (company.sobreNos) {
-                const backgroundImageUrl = company.id === 'sulnet-telecom' 
-                    ? 'https://images.unsplash.com/photo-1614850523011-8f495a764ac3?q=80&w=2070&auto=format&fit=crop'
-                    : company.galeria_fotos[1] || company.galeria_fotos[0];
+                const backgroundImageUrl = company.galeria_fotos[1] || company.galeria_fotos[0];
 
                 sobreNosHTML = `
                 <div class="space-y-12 md:space-y-16">
-                    <section class="relative rounded-3xl overflow-hidden text-white p-8 md:p-12 flex items-center justify-center text-center h-64 sm:h-80 bg-fixed" style="background-image: url('${backgroundImageUrl}'); background-size: cover;">
+                    <section class="relative rounded-3xl overflow-hidden text-white p-8 md:p-12 flex items-center justify-center text-center h-64 sm:h-80 bg-fixed" style="background-image: url('${backgroundImageUrl}'); background-size: cover; background-position: center;">
                         <div class="absolute inset-0 bg-gray-900/50 mix-blend-multiply"></div>
                         <div class="relative z-10">
                             <h3 class="text-3xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg">A Jornada da ${company.nome}</h3>
@@ -1612,6 +1254,7 @@ const UI = {
                         </div>
                     </section>
 
+                    ${company.sobreNos.teamGallery && company.sobreNos.teamGallery.length > 0 ? `
                     <section>
                         <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center tracking-tight">As Pessoas Por Trás do Sucesso</h3>
                         <div class="team-mosaic grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1621,16 +1264,16 @@ const UI = {
                             </a>
                         `).join('')}
                         </div>
-                    </section>
+                    </section>`: ''}
                 </div>
                 `;
             } else {
                 sobreNosHTML = `<h3 class="text-xl font-bold mb-4 border-b border-teal-100 pb-2">Sobre</h3>
-                                <p class="text-gray-700 leading-relaxed mb-8 prose">${company.descricao}</p>`;
+                                        <p class="text-gray-700 leading-relaxed mb-8 prose">${company.descricao}</p>`;
             }
 
             container.innerHTML = `
-                <button onclick="history.back()" class="bg-gray-100 text-gray-800 px-5 py-2.5 rounded-full mb-8 hover:bg-gray-200 transition-all shadow active:scale-95 text-sm font-semibold">← Voltar</button>
+                <button onclick="App.navigateBack()" class="bg-gray-100 text-gray-800 px-5 py-2.5 rounded-full mb-8 hover:bg-gray-200 transition-all shadow active:scale-95 text-sm font-semibold">← Voltar</button>
                 <div class="flex flex-col md:flex-row md:space-x-10 items-center">
                     <div class="md:w-1/3 mb-6 md:mb-0 text-center flex-shrink-0">
                         <img src="${company.logotipo}" alt="Logotipo de ${company.nome}" class="w-32 h-32 sm:w-40 sm:h-40 rounded-full mx-auto shadow-2xl shadow-teal-200/80 border-4 border-white -mt-20 md:-mt-24">
@@ -1658,7 +1301,7 @@ const UI = {
                     <div class="lg:col-span-2">
                         ${sobreNosHTML}
 
-                        ${company.videoUrl && company.videoUrl !== "https://www.youtube.com/embed/dQw4w9WgXcQ" ? `
+                        ${company.videoUrl ? `
                         <h3 class="text-xl font-bold mb-4 border-b border-teal-100 pb-2 mt-12">Apresentação</h3>
                         <div class="aspect-w-16 aspect-h-9 mb-8 rounded-2xl overflow-hidden shadow-lg bg-black">
                             <iframe class="w-full h-full" src="${company.videoUrl.replace('watch?v=', 'embed/')}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -1690,14 +1333,15 @@ const UI = {
                         <h3 class="text-xl font-bold mb-4 border-b border-teal-100 pb-2 mt-12">Galeria de Fotos</h3>
                         <div class="mb-8">
                             <div class="mb-4 rounded-2xl overflow-hidden shadow-xl shadow-teal-100/50">
-                                <img id="gallery-main-image" src="${company.galeria_fotos[0]}" alt="Foto principal de ${company.nome}" class="w-full h-64 md:h-96 object-cover transition-opacity duration-300">
+                                <img id="gallery-main-image" src="${company.galeria_fotos[0]}" alt="Foto principal de ${company.nome}" class="w-full h-64 md:h-96 object-cover transition-opacity duration-300" onerror="this.onerror=null;this.src='https://placehold.co/800x600/cccccc/ffffff?text=Imagem+Indisponível';">
                             </div>
                             <div id="gallery-thumbnails" class="flex overflow-x-auto space-x-3 pb-2 scroll-container">
                                 ${company.galeria_fotos.map((foto, index) => `
                                     <img src="${foto}" 
                                          alt="Thumbnail ${index + 1} de ${company.nome}" 
                                          class="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl cursor-pointer border-4 ${index === 0 ? 'border-teal-500' : 'border-transparent'} hover:border-teal-400 transition-all duration-200"
-                                         onclick="UI.updateMainGalleryImage(this)">
+                                         onclick="UI.updateMainGalleryImage(this)"
+                                         onerror="this.onerror=null;this.style.display='none';">
                                 `).join('')}
                             </div>
                         </div>
@@ -1835,7 +1479,7 @@ const UI = {
         if(tabName === 'history') {
             this.renderCultureHistoryTab();
         } else if (tabName === 'tourism') {
-            this.renderCultureTourismTab();
+            this.renderCultureTourismTab(true); // Força a reinicialização do mapa
         } else if (tabName === 'legends') {
             this.renderCultureLegendsTab();
         } else if (tabName === 'people') {
@@ -1880,11 +1524,23 @@ const UI = {
                         `).join('')}
                     </div>
                 </section>` : ''}
+                ${city.culture.gallery && city.culture.gallery.length > 0 ? `
+                <section>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center tracking-tight">Galeria da Cidade 🖼️</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        ${city.culture.gallery.map(imgSrc => `
+                            <a href="${imgSrc}" target="_blank" class="block rounded-xl overflow-hidden shadow-lg group transform hover:scale-105 transition-transform duration-300">
+                                <img src="${imgSrc}" alt="Foto de ${city.name}" class="w-full h-48 object-cover group-hover:brightness-110 transition-all" onerror="this.onerror=null;this.style.display='none';">
+                            </a>
+                        `).join('')}
+                    </div>
+                </section>
+                ` : ''}
             </div>
         `;
     },
 
-    renderCultureTourismTab() {
+    renderCultureTourismTab(initMap = true) {
         const container = document.getElementById('culture-tourism-tab');
         const city = DB.cities.find(c => c.name === State.currentCity);
         const tourism = city.culture.tourism;
@@ -1894,30 +1550,77 @@ const UI = {
             return;
         }
 
-        container.innerHTML = `
-            <div class="space-y-12">
-                <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto">${tourism.intro}</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    ${tourism.spots.map((spot, spotIndex) => `
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden group flex flex-col tourist-spot-card">
-                            <div class="h-56 overflow-hidden">
-                                <img id="spot-main-image-${spotIndex}" src="${spot.gallery[0]}" alt="Imagem de ${spot.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 gallery-main-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
-                            </div>
-                            <div class="p-6 flex flex-col flex-grow">
-                                <span class="text-sm font-bold text-teal-600 mb-1">${spot.type}</span>
-                                <h4 class="text-xl font-bold text-gray-800 mb-2">${spot.name}</h4>
-                                <p class="text-gray-600 text-sm flex-grow">${spot.description}</p>
-                                <div class="flex overflow-x-auto space-x-2 pt-4 mt-4 border-t scroll-container">
-                                    ${spot.gallery.map((img, thumbIndex) => `
-                                        <img src="${img}" class="w-16 h-16 object-cover rounded-md cursor-pointer border-2 ${thumbIndex === 0 ? 'border-teal-500' : 'border-transparent'}" onclick="UI.updateMainGalleryImage(this)">
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    `).join('')}
+        const categories = ['Todos', ...new Set(tourism.spots.map(s => s.category))];
+        const filteredSpots = State.tourismFilter === 'Todos' 
+            ? tourism.spots 
+            : tourism.spots.filter(s => s.category === State.tourismFilter);
+
+        if (initMap) {
+            container.innerHTML = `
+                <div class="space-y-12">
+                    <p class="text-lg text-center text-gray-600 max-w-3xl mx-auto">${tourism.intro}</p>
+                    <section>
+                        <h3 class="text-2xl md:text-3xl font-bold text-center mb-6 tracking-tight">Mapa Interativo 🗺️</h3>
+                        <div id="culture-map"></div>
+                    </section>
+                    <section>
+                        <h3 class="text-2xl md:text-3xl font-bold text-center mb-6 tracking-tight">Explore os Pontos Turísticos</h3>
+                        <div id="tourism-filters" class="flex overflow-x-auto scroll-container gap-3 mb-8 pb-2 justify-center"></div>
+                        <div id="tourism-spots-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+                    </section>
+                </div>
+            `;
+            setTimeout(() => this.initTourismMap(), 100);
+        }
+
+        const filtersContainer = document.getElementById('tourism-filters');
+        filtersContainer.innerHTML = categories.map(cat => `
+            <button onclick="App.filterTourismSpots('${cat}')" class="filter-btn px-4 py-2 text-sm font-semibold rounded-full whitespace-nowrap ${State.tourismFilter === cat ? 'active bg-white border-2' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm hover:shadow-md border-2 border-transparent'}">
+                ${cat}
+            </button>
+        `).join('');
+
+        const spotsGrid = document.getElementById('tourism-spots-grid');
+        spotsGrid.innerHTML = filteredSpots.map((spot, spotIndex) => `
+            <div id="${spot.id}" class="bg-white rounded-2xl shadow-lg overflow-hidden group flex flex-col tourist-spot-card">
+                <div class="h-56 overflow-hidden">
+                    <img src="${spot.gallery[0]}" alt="Imagem de ${spot.name}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 gallery-main-image" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/ffffff?text=Imagem+Indisponível';">
+                </div>
+                <div class="p-6 flex flex-col flex-grow">
+                    <span class="text-sm font-bold text-teal-600 mb-1">${spot.type}</span>
+                    <h4 class="text-xl font-bold text-gray-800 mb-2">${spot.name}</h4>
+                    <p class="text-gray-600 text-sm flex-grow">${spot.description}</p>
+                    <div class="mt-4 p-3 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg">
+                        <p class="text-sm text-gray-700"><strong class="font-bold">💡 Dica do Local:</strong> ${spot.tip}</p>
+                    </div>
                 </div>
             </div>
-        `;
+        `).join('');
+    },
+
+    initTourismMap() {
+        const city = DB.cities.find(c => c.name === State.currentCity);
+        if (!city || !city.culture.tourism.spots) return;
+
+        State.clearMapInstances(); // Garante que não há mapa antigo
+
+        State.tourismMap = L.map('culture-map').setView([city.lat, city.lon], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(State.tourismMap);
+
+        city.culture.tourism.spots.forEach(spot => {
+            const marker = L.marker([spot.lat, spot.lon]).addTo(State.tourismMap);
+            marker.bindPopup(`
+                <div class="popup-content">
+                    <img src="${spot.gallery[0]}" class="popup-image">
+                    <div class="popup-info">
+                        <div class="popup-title">${spot.name}</div>
+                        <a onclick="document.getElementById('${spot.id}').scrollIntoView({ behavior: 'smooth' });" class="popup-link">Ver Detalhes ↓</a>
+                    </div>
+                </div>
+            `);
+        });
     },
 
     renderCultureLegendsTab() {
@@ -1936,7 +1639,7 @@ const UI = {
                 ${legends.map(legend => `
                     <div class="flex flex-col md:flex-row gap-8 bg-white p-4 sm:p-6 rounded-2xl shadow-lg items-center">
                         <div class="w-full md:w-1/3 mb-4 md:mb-0">
-                            <img src="${legend.image}" alt="Ilustração para ${legend.title}" class="w-full h-64 object-cover rounded-xl shadow-md">
+                            <img src="${legend.image}" alt="Ilustração para ${legend.title}" class="w-full h-64 object-cover rounded-xl shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/800x600/cccccc/ffffff?text=Ilustração';">
                         </div>
                         <div class="w-full md:w-2/3">
                             <h4 class="text-2xl font-bold text-gray-800 mb-3">${legend.title}</h4>
@@ -1954,17 +1657,17 @@ const UI = {
         const people = city.culture.peopleStories;
 
         if (!people || people.length === 0) {
-            container.innerHTML = `<p class="text-center text-gray-500 py-10">Nenhuma história para ${city.name} foi adicionada ainda.</p>`;
+            container.innerHTML = `<p class="text-center text-gray-500 py-10">Nenhuma história de pessoas influentes para ${city.name} foi adicionada ainda.</p>`;
             return;
         }
         
         container.innerHTML = `
             <div class="space-y-12">
-                 <h3 class="text-2xl md:text-3xl font-bold text-center tracking-tight">As Pessoas que Fazem a Cidade ❤️</h3>
+                 <h3 class="text-2xl md:text-3xl font-bold text-center tracking-tight">As Pessoas que Fizeram História ❤️</h3>
                 ${people.map(person => `
                     <div class="flex flex-col md:flex-row gap-8 bg-white p-4 sm:p-6 rounded-2xl shadow-lg items-center odd:md:flex-row-reverse">
                         <div class="w-full md:w-1/3 mb-4 md:mb-0">
-                            <img src="${person.photo}" alt="Foto de ${person.name}" class="w-full h-80 object-cover rounded-xl shadow-md">
+                            <img src="${person.photo}" alt="Foto de ${person.name}" class="w-full h-80 object-cover rounded-xl shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x600/cccccc/ffffff?text=Perfil';">
                         </div>
                         <div class="w-full md:w-2/3">
                             <h4 class="text-2xl font-bold text-gray-800 mb-3">${person.name}</h4>
@@ -2060,22 +1763,24 @@ const UI = {
     },
 
     renderCareerGuideContent() {
-        const container = document.getElementById('careers-guide-tab');
-        container.innerHTML = `
-             <div class="text-center mb-10">
-                  <h3 class="text-2xl font-bold tracking-tight">Comece a Planejar seu Futuro</h3>
-                  <p class="text-gray-500 mt-2">Dicas para quem está no ensino médio ou recém-formado.</p>
-             </div>
-             <div class="border-b border-gray-200 mb-8">
-                  <nav id="inner-careers-nav" class="-mb-px flex space-x-4 sm:space-x-6 justify-center overflow-x-auto scroll-container pb-2">
-                        <button onclick="UI.switchInnerCareersTab('high-school', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-base sm:text-lg active">Estou no Ensino Médio</button>
-                        <button onclick="UI.switchInnerCareersTab('post-high-school', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-base sm:text-lg">Terminei o Ensino Médio</button>
-                   </nav>
-             </div>
-             <div id="careers-high-school-tab-inner" class="tab-content"></div>
-             <div id="careers-post-high-school-tab-inner" class="tab-content hidden"></div>
-        `;
-        this.renderHighSchoolContent();
+      const container = document.getElementById('careers-guide-tab');
+      container.innerHTML = `
+            <div class="text-center mb-10">
+                <h3 class="text-2xl font-bold tracking-tight">Comece a Planejar seu Futuro</h3>
+                <p class="text-gray-500 mt-2">Dicas e recursos para sua jornada profissional na região.</p>
+           </div>
+            <div class="border-b border-gray-200 mb-8">
+                <nav id="inner-careers-nav" class="-mb-px flex space-x-4 sm:space-x-6 justify-center overflow-x-auto scroll-container pb-2">
+                      <button onclick="UI.switchInnerCareersTab('high-school', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-base sm:text-lg active">Estou no Ensino Médio</button>
+                      <button onclick="UI.switchInnerCareersTab('post-high-school', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-base sm:text-lg">Terminei o Ensino Médio</button>
+                      <button onclick="UI.switchInnerCareersTab('local-opportunities', this)" class="tab-btn whitespace-nowrap py-3 px-1 border-b-2 font-medium text-base sm:text-lg">Oportunidades Locais</button>
+                </nav>
+           </div>
+            <div id="careers-high-school-tab-inner" class="tab-content"></div>
+            <div id="careers-post-high-school-tab-inner" class="tab-content hidden"></div>
+            <div id="careers-local-opportunities-tab-inner" class="tab-content hidden"></div>
+      `;
+      this.renderHighSchoolContent();
     },
 
     switchInnerCareersTab(tabName, clickedButton) {
@@ -2085,13 +1790,16 @@ const UI = {
         
         document.getElementById('careers-high-school-tab-inner').classList.add('hidden');
         document.getElementById('careers-post-high-school-tab-inner').classList.add('hidden');
+        document.getElementById('careers-local-opportunities-tab-inner').classList.add('hidden');
 
         document.getElementById(`careers-${tabName}-tab-inner`).classList.remove('hidden');
 
         if (tabName === 'high-school') {
             this.renderHighSchoolContent();
-        } else {
+        } else if (tabName === 'post-high-school') {
             this.renderPostHighSchoolContent();
+        } else if (tabName === 'local-opportunities') {
+            this.renderLocalOpportunitiesContent();
         }
     },
     
@@ -2161,6 +1869,41 @@ const UI = {
                             <h4 class="font-bold text-lg">${item.title}</h4>
                             <p class="text-sm opacity-90 mt-2">${item.description}</p>
                         </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    },
+
+    renderLocalOpportunitiesContent() {
+        const data = DB.careerGuide.localOpportunities;
+        const container = document.getElementById('careers-local-opportunities-tab-inner');
+        container.innerHTML = `
+            <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+                <p class="text-center text-gray-600 mb-10">${data.intro}</p>
+                
+                <h3 class="text-2xl font-bold text-center mb-6 tracking-tight">Profissões em Alta na Região</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+                    ${data.professions.map(item => `
+                        <div class="career-card bg-gray-50 p-6 rounded-xl border">
+                            <div class="flex items-start">
+                                <div class="text-4xl mr-4">${item.icon}</div>
+                                <div>
+                                    <h4 class="font-bold text-xl text-gray-800">${item.title}</h4>
+                                    <p class="text-sm text-gray-600 mt-2">${item.description}</p>
+                                    <p class="text-sm text-teal-700 font-semibold mt-3">Formação: ${item.needs}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <h3 class="text-2xl font-bold text-center mb-6 tracking-tight">Onde Estudar na Região</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    ${data.institutions.map(item => `
+                         <a href="${item.link}" target="_blank" class="career-card block bg-white p-6 rounded-xl shadow-md border hover:bg-teal-50 text-center">
+                            <h4 class="font-bold text-lg text-teal-700">${item.name} →</h4>
+                        </a>
                     `).join('')}
                 </div>
             </div>
@@ -2260,7 +2003,7 @@ const UI = {
                         ${data.localStories.map(person => `
                             <div class="flex flex-col md:flex-row gap-8 bg-white p-4 sm:p-6 rounded-2xl shadow-lg items-center odd:md:flex-row-reverse">
                                 <div class="w-full md:w-1/3 mb-4 md:mb-0">
-                                    <img src="${person.photo}" alt="Foto de ${person.name}" class="w-full h-80 object-cover rounded-xl shadow-md">
+                                    <img src="${person.photo}" alt="Foto de ${person.name}" class="w-full h-80 object-cover rounded-xl shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/400x600/cccccc/ffffff?text=Perfil';">
                                 </div>
                                 <div class="w-full md:w-2/3">
                                     <h5 class="text-2xl font-bold text-gray-800">${person.name}</h5>
@@ -2426,7 +2169,6 @@ const Utils = {
         const now = new Date();
         const weekdays = ["domingo", "segunda", "terca", "quarta", "quinta", "sexta", "sabado"];
         
-        // Function to check a specific day's schedule
         const checkSchedule = (dayIndex, referenceDate) => {
             const dayKey = weekdays[dayIndex];
             const hours = company.horario_funcionamento[dayKey];
@@ -2443,7 +2185,6 @@ const Utils = {
             const closeDate = new Date(referenceDate);
             closeDate.setHours(closeHour, closeMin, 0, 0);
 
-            // Handle overnight schedules (e.g., 18:00 - 02:00)
             if (closeDate <= openDate) {
                 closeDate.setDate(closeDate.getDate() + 1);
             }
@@ -2451,12 +2192,10 @@ const Utils = {
             return now >= openDate && now < closeDate;
         };
         
-        // Check today's schedule
         if (checkSchedule(now.getDay(), now)) {
             return true;
         }
 
-        // Check yesterday's schedule (for shifts that cross midnight)
         const yesterday = new Date(now);
         yesterday.setDate(now.getDate() - 1);
         if (checkSchedule(yesterday.getDay(), yesterday)) {
@@ -2466,6 +2205,14 @@ const Utils = {
         return false;
     },
     
+    getOpenStatusBadge(company, extraClasses = 'absolute top-2 left-2') {
+        if (this.isCompanyOpen(company)) {
+            return `<div class="${extraClasses} text-xs font-bold px-2.5 py-1 rounded-full bg-green-100 text-green-800 shadow-sm">Aberto</div>`;
+        } else {
+            return `<div class="${extraClasses} text-xs font-bold px-2.5 py-1 rounded-full bg-red-100 text-red-800 shadow-sm">Fechado</div>`;
+        }
+    },
+
     formatCountdown(targetDate) {
         const now = new Date().getTime();
         const target = new Date(targetDate).getTime();
